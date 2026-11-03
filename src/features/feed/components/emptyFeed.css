@@ -1,0 +1,5 @@
+@media (max-width: 600px) {
+  .empty-feed {
+    padding: 48px 12px;
+  }
+}
