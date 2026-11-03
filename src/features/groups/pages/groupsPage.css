@@ -1,0 +1,58 @@
+
+.groups-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* Page header */
+.groups-page-header {
+  margin-bottom: 36px;
+}
+
+.groups-page-header .eyebrow {
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+
+.groups-page-header h1 {
+  font-size: 2rem;
+  margin: 0 0 10px;
+}
+
+.groups-page-header p:last-child {
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* Group cards */
+.groups-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.group-card {
+  min-height: 150px;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  display: flex;
+  align-items: flex-end;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.group-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgb(30 25 60 / 10%);
+}
+
+.group-card h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}

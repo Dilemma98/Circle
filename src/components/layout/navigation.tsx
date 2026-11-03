@@ -1,19 +1,21 @@
-import "./navigation.css";
+
+import { NavLink } from "react-router-dom";
+import "./Navigation.css";
 
 export default function Navigation() {
   return (
     <nav className="main-navigation">
-      <a href="/" className="active">
+      <NavLink to="/" end>
         Hem
-      </a>
+      </NavLink>
 
-      <a href="/groups">
+      <NavLink to="/groups">
         Mina grupper
-      </a>
+      </NavLink>
 
-      <a href="/profile">
+      <NavLink to="/profile">
         Profil
-      </a>
+      </NavLink>
     </nav>
   );
 }
