@@ -1,31 +1,42 @@
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import {useEffect} from "react";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 
 import AppLayout from "./components/layout/appLayout";
 import HomePage from "./features/feed/pages/homePage";
 import GroupsPage from "./features/groups/pages/groupsPage";
 import GroupPage from "./features/groups/pages/groupPage";
-import { ThemeProvider } from "./features/theme/themeProvider";
+import AuthPage from "./features/auth/pages/authPage";
+import InvitationPage from "./features/invitations/pages/invitationPage";
 
-import { testSupabaseConnection } from "./lib/supabase";
+import { ThemeProvider } from "./features/theme/themeProvider";
+import { AuthProvider } from "./features/auth/authProvider";
+import ProtectedRoute from "./features/auth/components/protectedRoute";
 
 export default function App() {
-
- useEffect(() => {
-  testSupabaseConnection();
-}, []);
-
   return (
     <BrowserRouter>
       <ThemeProvider>
-        <AppLayout>
+        <AuthProvider>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/groups" element={<GroupsPage />} />
-            <Route path="/groups/:groupId" element={<GroupPage />} />
+            {/* Public route */}
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/invite/:token" element={<InvitationPage />} />
+            {/* Protected routes */}
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <Outlet />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/" element={<HomePage />} />
+              <Route path="/groups" element={<GroupsPage />} />
+              <Route path="/groups/:groupId" element={<GroupPage />} />
+            </Route>
           </Routes>
-        </AppLayout>
+        </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
