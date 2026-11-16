@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { acceptInvitation } from "../invitationService";
 import { useAuth } from "../../auth/authProvider";
 import { getInvitationByToken, type Invitation } from "../invitationService";
-import { signOut } from "../../auth/authService";
 
 export default function InvitationPage() {
   const { token } = useParams<{ token: string }>();

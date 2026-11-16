@@ -4,12 +4,6 @@ import ThemeToggle from "../common/themeToggle";
 import { supabase } from "../../lib/supabase";
 
 export default function Header() {
-  const { profile } = useAuth();
-
-  const name = profile?.display_name ?? "";
-  const initial = name ? name.charAt(0).toUpperCase() : "?";
-
-  console.log("header", profile);
 
   async function handleLogout() {
     const { error } = await supabase.auth.signOut();
