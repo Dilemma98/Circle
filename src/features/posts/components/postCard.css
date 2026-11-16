@@ -58,6 +58,7 @@
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
+
 .post-card-images {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -97,17 +98,35 @@
   pointer-events: none;
 }
 
-.post-card-images img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: 12px;
-  cursor: zoom-in;
-  transition: transform 0.2s ease;
+/* Footer: hjärta till vänster, kommentarer till höger */
+.post-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px -12px -8px;   /* negativ marginal så ikonerna linjerar med texten */
 }
 
-.post-card-images img:hover {
-  transform: scale(1.02);
+.reaction-button,
+.post-card-comment-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.reaction-button:hover,
+.reaction-button[aria-pressed="true"],
+.post-card-comment-button:hover,
+.post-card-comment-button[aria-expanded="true"] {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
 }
 
 @media (max-width: 600px) {
@@ -117,5 +136,9 @@
 
   .post-card-content {
     margin-top: 16px;
+  }
+
+  .post-card-footer {
+    margin: 10px -10px -6px;
   }
 }

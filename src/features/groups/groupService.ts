@@ -4,7 +4,7 @@ import type { Group } from "./types/group";
 export async function getMyGroups(): Promise<Group[]> {
   const { data, error } = await supabase
     .from("groups")
-    .select("id, name")
+    .select("id, name, coverImage")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -31,6 +31,7 @@ export async function createGroup(name: string): Promise<Group> {
     id: crypto.randomUUID(),
     name: name.trim(),
     created_by: user.id,
+    coverImage: ""
   };
 
   const { error } = await supabase
@@ -42,6 +43,7 @@ export async function createGroup(name: string): Promise<Group> {
   return {
     id: newGroup.id,
     name: newGroup.name,
+    coverImage: newGroup.coverImage
   };
 }
 
@@ -50,7 +52,7 @@ export async function getGroupById(
 ): Promise<Group | null> {
   const { data, error } = await supabase
     .from("groups")
-    .select("id, name")
+    .select("id, name, coverImage")
     .eq("id", groupId)
     .maybeSingle();
 

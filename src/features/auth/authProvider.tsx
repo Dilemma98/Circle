@@ -64,7 +64,7 @@ useEffect(() => {
   }
 
   loadProfile();
-}, [user]);
+}, [user?.id]);
 
   return (
     <AuthContext.Provider value={{ user, session, profile, loading }}>

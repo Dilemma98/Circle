@@ -7,6 +7,7 @@ export interface Post {
   content: string;
   media: PostMedia[];
   createdAt: string;
+  commentCount?: number;
 }
 
 export type PostMedia =

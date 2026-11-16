@@ -82,16 +82,16 @@ onCreatePost(
           </button>
         </div>
 
-        <div className="post-author">
+        {/* <div className="post-author">
           <div className="user-avatar">E</div>
           <div>
             <strong>Emma</strong>
             <span>Välj vilken grupp som ska se inlägget</span>
           </div>
-        </div>
+        </div> */}
 
         <div className="group-select-container">
-          <label htmlFor="post-group">Publicera i</label>
+          {/* <label htmlFor="post-group">Publicera i</label> */}
 
           <select
             id="post-group"

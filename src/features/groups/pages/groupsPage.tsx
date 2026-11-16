@@ -121,15 +121,20 @@ export default function GroupsPage() {
 
         {!loading &&
           !error &&
-          groups.map((group) => (
-            <Link
-              to={`/groups/${group.id}`}
-              className="group-card"
-              key={group.id}
-            >
-              <h2>{group.name}</h2>
-            </Link>
-          ))}
+          groups.map((group) => {
+            console.log("Group:", group);
+
+            return (
+              <Link
+                to={`/groups/${group.id}`}
+                className="group-card"
+                key={group.id}
+              >
+                <img className="group-cover" src={group.coverImage} alt="" />
+                <h2>{group.name}</h2>
+              </Link>
+            );
+          })}
       </section>
     </div>
   );

@@ -1,5 +1,5 @@
-import { supabase } from "../../lib/supabase";
-import type { ImagePreview } from "./hooks/useImagePreviews";
+import { supabase } from "../../../lib/supabase";
+import type { ImagePreview } from "../hooks/useImagePreviews";
 
 export async function createPost(
   groupId: string,
@@ -65,11 +65,11 @@ export async function uploadPostImage(
 }
 
 export async function getGroupPosts(groupIds: string[]) {
-  const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .in("group_id", groupIds)
-    .order("created_at", { ascending: false });
+const { data, error } = await supabase
+  .from("posts")
+  .select("*, comments(count)")
+  .in("group_id", groupIds)
+  .order("created_at", { ascending: false });
 
   if (error) throw error;
   const postIds = data.map((post) => post.id);
@@ -111,12 +111,13 @@ export async function getGroupPosts(groupIds: string[]) {
 
     return {
       id: post.id,
-      groupId: post.group_id,
-      authorId: post.author_id,
-      authorName: author?.display_name ?? "Okänd användare",
-      authorAvatar: author?.avatar_url ?? null,
-      content: post.content,
-      createdAt: post.created_at,
+  groupId: post.group_id,
+  authorId: post.author_id,
+  authorName: author?.display_name ?? "Okänd användare",
+  authorAvatar: author?.avatar_url ?? null,
+  content: post.content,
+  createdAt: post.created_at,
+  commentCount: post.comments?.[0]?.count ?? 0,
 
       media: mediaWithUrls
         .filter((media) => media.post_id === post.id)

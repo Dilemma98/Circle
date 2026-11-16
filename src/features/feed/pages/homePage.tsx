@@ -12,9 +12,8 @@ import {
   createPost,
   uploadPostImage,
   getGroupPosts,
-} from "../../posts/postService";
+} from "../../posts/services/postService";
 
-import FeedToolbar from "../components/feedToolbar";
 import EmptyFeed from "../components/emptyFeed";
 import CreatePostModal from "../../posts/components/createPostModal";
 import CreatePostButton from "../../posts/components/createPostButton";
@@ -96,8 +95,8 @@ export default function HomePage() {
   return (
     <div className="home-page">
       <section className="feed-section">
-        <h2>Hej {profile?.display_name ?? "där"}! 👋</h2>
-        <FeedToolbar />
+        {/* <h2>Hej {profile?.display_name ?? "där"}! 👋</h2> */}
+        {/* <FeedToolbar /> */}
 
         {posts.length === 0 ? (
           <EmptyFeed />
