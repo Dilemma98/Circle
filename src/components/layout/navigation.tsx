@@ -3,7 +3,7 @@ import { House, Users, UserRound } from "lucide-react";
 
 import { useAuth } from "../../features/auth/authProvider";
 
-import "./Navigation.css";
+import "./navigation.css";
 
 export default function Navigation() {
   const { profile } = useAuth();
