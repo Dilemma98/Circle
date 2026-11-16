@@ -1,5 +1,4 @@
 import "./header.css";
-import { useAuth } from "../../features/auth/authProvider";
 import ThemeToggle from "../common/themeToggle";
 import { supabase } from "../../lib/supabase";
 
