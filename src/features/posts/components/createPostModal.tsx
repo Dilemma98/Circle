@@ -17,7 +17,6 @@ import {
   ChevronDown,
   Users,
   Send,
-  Image as ImageIcon,
 } from "lucide-react";
 
 interface CreatePostModalProps {
@@ -47,7 +46,6 @@ export default function CreatePostModal({
     addImages,
     removeImage,
     clearImages,
-    updateCaption,
   } = useImagePreviews();
 
   if (!isOpen) {

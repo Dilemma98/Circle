@@ -5,7 +5,6 @@ import { useState } from "react";
 import {
   Users,
   MessageCircle,
-  X,
 } from "lucide-react";
 
 import ImageLightbox from "./imageLightbox";
