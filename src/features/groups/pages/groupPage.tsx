@@ -9,13 +9,13 @@ import {
 } from "../groupService";
 import type { Group } from "../types/group";
 import { useAuth } from "../../auth/authProvider";
-import { sendInvitation } from "../../invitations/invitationService";
 import {
   getGroupPosts,
   getGroupPhotos,
 } from "../../posts/services/postService";
 import type { Post, GroupPhoto } from "../../posts/types/post";
 import PostCard from "../../posts/components/postCard";
+import InvitationPanel from "./invitationPanel";
 
 import "./groupPage.css";
 
@@ -45,11 +45,6 @@ export default function GroupPage() {
   const isOwner = members.some(
     (member) => member.user_id === user?.id && member.role === "owner",
   );
-  const [showInviteForm, setShowInviteForm] = useState(false);
-  const [sendingInvitation, setSendingInvitation] = useState(false);
-  const [inviteError, setInviteError] = useState("");
-  const [inviteSuccess, setInviteSuccess] = useState("");
-  const [invitationUrl, setInvitationUrl] = useState("");
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(false);
@@ -187,32 +182,6 @@ export default function GroupPage() {
       console.error("Could not load group photos:", error);
     } finally {
       setPhotosLoading(false);
-    }
-  }
-
-  async function handleSendInvitation() {
-    if (!groupId) return;
-
-    setSendingInvitation(true);
-    setInviteError("");
-    setInviteSuccess("");
-    setInvitationUrl("");
-
-    try {
-      const result = await sendInvitation(groupId);
-
-      setInvitationUrl(result.invitationUrl);
-      setInviteSuccess("Inbjudningslänken har skapats!");
-    } catch (error) {
-      console.error("Could not create invitation:", error);
-
-      setInviteError(
-        error instanceof Error
-          ? error.message
-          : "Kunde inte skapa inbjudningslänk.",
-      );
-    } finally {
-      setSendingInvitation(false);
     }
   }
 
@@ -410,93 +379,8 @@ export default function GroupPage() {
 
         {activeTab === "members" && (
           <>
-            {isOwner && (
-              <div className="invite-member">
-                {!showInviteForm ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowInviteForm(true);
-                      setInviteError("");
-                      setInviteSuccess("");
-                      setInvitationUrl("");
-                    }}
-                  >
-                    + Bjud in medlem
-                  </button>
-                ) : (
-                  <div className="invite-form">
-                    <h3>Bjud in till gruppen</h3>
-                    <p>
-                      Skapa en personlig inbjudningslänk som du kan dela via
-                      SMS, Messenger eller på annat sätt.
-                    </p>
+            {isOwner && groupId && <InvitationPanel groupId={groupId} />}
 
-                    {inviteError && (
-                      <p className="invite-error">{inviteError}</p>
-                    )}
-
-                    {inviteSuccess && (
-                      <p className="invite-success">{inviteSuccess}</p>
-                    )}
-
-                    {invitationUrl && (
-                      <div className="invitation-link-container">
-                        <input type="text" value={invitationUrl} readOnly />
-
-                        <button
-                          type="button"
-                          onClick={async () => {
-                            try {
-                              await navigator.clipboard.writeText(
-                                invitationUrl,
-                              );
-                              setInviteSuccess("Länken har kopierats!");
-                            } catch (error) {
-                              console.error(
-                                "Could not copy invitation link:",
-                                error,
-                              );
-                              setInviteError("Kunde inte kopiera länken.");
-                            }
-                          }}
-                        >
-                          Kopiera länk
-                        </button>
-                      </div>
-                    )}
-
-                    <div className="invite-actions">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowInviteForm(false);
-                          setInviteError("");
-                          setInviteSuccess("");
-                          setInvitationUrl("");
-                        }}
-                      >
-                        Stäng
-                      </button>
-
-                      {!invitationUrl && (
-                        <button
-                          type="button"
-                          onClick={handleSendInvitation}
-                          disabled={sendingInvitation}
-                        >
-                          {sendingInvitation
-                            ? "Skapar länk..."
-                            : "Skapa inbjudningslänk"}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {inviteSuccess && <p className="invite-success">{inviteSuccess}</p>}
             <div className="group-members">
               {membersLoading ? (
                 <p>Hämtar medlemmar...</p>

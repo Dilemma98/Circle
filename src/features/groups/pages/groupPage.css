@@ -1,11 +1,17 @@
 
+/* ==============================
+   Group page
+============================== */
+
 .group-page {
   max-width: 1100px;
   margin: 0 auto;
   padding: 32px 24px;
 }
 
-/* Group header */
+/* ==============================
+   Group header
+============================== */
 
 .group-page-header {
   margin-bottom: 32px;
@@ -36,7 +42,9 @@
   gap: 20px;
 }
 
-/* Group cover image */
+/* ==============================
+   Group cover image
+============================== */
 
 .group-cover-image {
   width: 100%;
@@ -53,7 +61,9 @@
   object-fit: cover;
 }
 
-/* Group editing */
+/* ==============================
+   Group editing
+============================== */
 
 .edit-group-button {
   display: inline-flex;
@@ -103,7 +113,9 @@
   background: var(--color-border);
 }
 
-/* Group color picker */
+/* ==============================
+   Group color picker
+============================== */
 
 .group-color-options {
   display: flex;
@@ -148,7 +160,9 @@
   font-size: 0.8rem;
 }
 
-/* Group cover upload */
+/* ==============================
+   Group cover upload
+============================== */
 
 .group-cover-upload-button {
   display: inline-flex;
@@ -169,15 +183,9 @@
   background: var(--color-primary-light);
 }
 
-/* Group feed */
-
-.group-feed {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-}
-
-/* Group tabs */
+/* ==============================
+   Group tabs
+============================== */
 
 .group-tabs {
   display: flex;
@@ -194,6 +202,7 @@
   background: transparent;
   color: var(--color-text-muted);
   font-weight: 500;
+  cursor: pointer;
   transition:
     color 0.2s ease,
     border-color 0.2s ease;
@@ -212,7 +221,19 @@
   min-height: 200px;
 }
 
-/* Group members */
+/* ==============================
+   Group feed
+============================== */
+
+.group-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+/* ==============================
+   Group members
+============================== */
 
 .group-members {
   display: flex;
@@ -267,57 +288,9 @@
   font-size: 13px;
 }
 
-/* Invite members */
-
-.invite-member {
-  margin-bottom: 20px;
-}
-
-.invite-member form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 18px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-}
-
-.invite-member label {
-  color: var(--color-text);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.invite-member input {
-  width: 100%;
-  padding: 11px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-background);
-  color: var(--color-text);
-  font: inherit;
-}
-
-.invite-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.invite-error {
-  color: #d9534f;
-  font-size: 13px;
-}
-
-.invite-success {
-  margin-bottom: 16px;
-  color: #27834b;
-  font-size: 14px;
-}
-
-/* Group album */
+/* ==============================
+   Group album
+============================== */
 
 .group-album {
   display: grid;
@@ -380,7 +353,9 @@
   color: var(--color-text-muted);
 }
 
-/* Animations */
+/* ==============================
+   Animations
+============================== */
 
 @keyframes settings-appear {
   from {
@@ -394,7 +369,9 @@
   }
 }
 
-/* Responsive layout */
+/* ==============================
+   Responsive layout
+============================== */
 
 @media (max-width: 700px) {
   .group-album {

@@ -1,0 +1,235 @@
+
+.invitation-panel {
+  width: 100%;
+  padding: 24px;
+  margin-bottom: 24px;
+  background: var(--surface-secondary, #202020);
+  border: 1px solid var(--border-color, #343434);
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+
+.invitation-panel-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.invitation-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(185, 77, 121, 0.15);
+  color: #d77ca0;
+  font-size: 22px;
+}
+
+.invitation-heading h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.invitation-heading p {
+  margin: 0;
+  color: var(--text-secondary, #aaa);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.invitation-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.invitation-info-icon {
+  flex-shrink: 0;
+  color: var(--text-secondary, #aaa);
+}
+
+.invitation-info p {
+  margin: 0;
+  color: var(--text-secondary, #aaa);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.invitation-primary-button {
+  width: 100%;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #b94d79;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.invitation-primary-button:hover:not(:disabled) {
+  background: #a8406b;
+  transform: translateY(-1px);
+}
+
+.invitation-primary-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.invitation-spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: invitation-spin 0.7s linear infinite;
+}
+
+@keyframes invitation-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.invitation-success {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.invitation-success-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(103, 151, 106, 0.18);
+  color: #86bd89;
+  font-weight: 700;
+}
+
+.invitation-success strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.invitation-success p {
+  margin: 0;
+  color: var(--text-secondary, #aaa);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.invitation-created > label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-secondary, #aaa);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.invitation-link-field {
+  display: flex;
+  gap: 8px;
+}
+
+.invitation-link-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--border-color, #444);
+  border-radius: 9px;
+  outline: none;
+  background: var(--surface-primary, #171717);
+  color: var(--text-primary, #eee);
+  font-size: 13px;
+}
+
+.invitation-link-field input:focus {
+  border-color: #b94d79;
+}
+
+.invitation-link-field button {
+  flex-shrink: 0;
+  padding: 0 16px;
+  border: none;
+  border-radius: 9px;
+  background: #b94d79;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.invitation-link-field button:hover {
+  background: #a8406b;
+}
+
+.invitation-link-field button.copied {
+  background: #527e57;
+}
+
+.invitation-copy-feedback {
+  margin: 10px 0 0;
+  color: #86bd89;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.invitation-error {
+  margin: 0 0 14px;
+  color: #e28a8a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.invitation-close-button {
+  margin-top: 18px;
+  padding: 9px 14px;
+  border: 1px solid var(--border-color, #444);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-secondary, #bbb);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.invitation-close-button:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 480px) {
+  .invitation-panel {
+    padding: 18px;
+  }
+
+  .invitation-link-field {
+    flex-direction: column;
+  }
+
+  .invitation-link-field button {
+    min-height: 42px;
+  }
+}
