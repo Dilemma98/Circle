@@ -119,22 +119,32 @@ export default function GroupsPage() {
           <p>Du har inte gått med i någon grupp ännu.</p>
         )}
 
-        {!loading &&
-          !error &&
-          groups.map((group) => {
-            console.log("Group:", group);
+{!loading &&
+  !error &&
+  groups.map((group) => (
+    <Link
+      to={`/groups/${group.id}`}
+      className="group-card"
+      key={group.id}
+      style={{ backgroundColor: group.color || "#B94D79" }}
+    >
+      {group.coverImage && (
+        <img
+          className="group-cover"
+          src={group.coverImage}
+          alt=""
+        />
+      )}
 
-            return (
-              <Link
-                to={`/groups/${group.id}`}
-                className="group-card"
-                key={group.id}
-              >
-                <img className="group-cover" src={group.coverImage} alt="" />
-                <h2>{group.name}</h2>
-              </Link>
-            );
-          })}
+      <div className="group-card-overlay" />
+
+      <div className="group-card-content">
+        <span className="group-card-label">GEMENSKAP</span>
+        <h2>{group.name}</h2>
+        <span className="group-card-arrow">↗</span>
+      </div>
+    </Link>
+  ))}
       </section>
     </div>
   );

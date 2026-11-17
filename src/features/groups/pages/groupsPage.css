@@ -1,141 +1,229 @@
 
+/* ========================================
+   Groups page
+======================================== */
+
 .groups-page {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 40px 24px 64px;
 }
 
 /* Page header */
+
 .groups-page-header {
-  margin-bottom: 36px;
+  margin-bottom: 42px;
 }
 
 .groups-page-header .eyebrow {
+  margin-bottom: 10px;
   color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  margin-bottom: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
 }
 
 .groups-page-header h1 {
-  font-size: 2rem;
-  margin: 0 0 10px;
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
 }
 
 .groups-page-header p:last-child {
+  margin: 0;
   color: var(--color-text-muted);
-  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
-/* Group cards */
-.groups-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);   /* 3 per rad */
-  gap: 1em;
-}
-
-/* Om det inte finns en 3:e grupp: 2 kolumner */
-.groups-list:not(:has(.group-card:nth-child(3))) {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.group-card {
-  position: relative;
-  width: 100%;
-  max-width: 180px;        /* cirkeln blir inte jättestor på dator */
-  aspect-ratio: 1;         /* alltid lika hög som bred */
-  justify-self: center;    /* centrera i sin ruta */
-  padding: 0;
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  background: var(--color-surface);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-decoration: none;
-  color: white;
-}
-
-.group-card h2 {
-  position: relative;
-  z-index: 1;
-  font-size: clamp(0.85rem, 3.5vw, 1.2rem);  /* krymper på små skärmar */
-  margin: 0;
-  padding: 0 10px;
-  text-align: center;
-  overflow-wrap: anywhere;                    /* långa namn bryts i stället för att klippas */
-}
-
-.group-cover {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.5;
-}
-
-.group-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgb(30 25 60 / 10%);
-}
+/* ========================================
+   Group actions
+======================================== */
 
 .groups-actions {
   display: flex;
   justify-content: flex-end;
-  margin: 24px 0;
+  margin-bottom: 28px;
 }
 
 .groups-actions button {
-  padding: 11px 18px;
-  border: none;
-  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: 12px;
   background: var(--color-primary);
   color: white;
   font: inherit;
+  font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .groups-actions button:hover {
+  transform: translateY(-2px);
   background: var(--color-primary-hover);
+  box-shadow: var(--shadow-card);
 }
+
+/* ========================================
+   Group cards
+======================================== */
+
+.groups-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  justify-items: center;
+}
+
+.group-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 210px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  isolation: isolate;
+}
+
+.group-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 18%);
+}
+
+.group-cover {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.group-card:hover .group-cover {
+  transform: scale(1.08);
+}
+
+.group-card-overlay {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    145deg,
+    rgb(0 0 0 / 15%),
+    rgb(0 0 0 / 48%)
+  );
+}
+
+.group-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 18px;
+}
+
+.group-card-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  opacity: 0.8;
+}
+
+.group-card h2 {
+  margin: 0;
+  padding: 0 6px;
+  font-size: clamp(0.9rem, 2vw, 1.3rem);
+  font-weight: 650;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.group-card-arrow {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 3px;
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: 50%;
+  font-size: 0.85rem;
+  opacity: 0;
+  transform: translateY(5px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.group-card:hover .group-card-arrow {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========================================
+   Create group form
+======================================== */
 
 .create-group-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-width: 420px;
-  padding: 24px;
-  margin-bottom: 24px;
-  background: var(--color-surface);
+  max-width: 440px;
+  padding: 26px;
+  margin-bottom: 32px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: 18px;
+  background: var(--color-surface);
   box-shadow: var(--shadow-card);
+  animation: form-appear 0.2s ease;
 }
 
 .create-group-form label {
   color: var(--color-text);
+  font-size: 0.88rem;
   font-weight: 600;
 }
 
 .create-group-form input {
-  padding: 12px 14px;
+  width: 100%;
+  padding: 13px 14px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: 10px;
   background: var(--color-background);
   color: var(--color-text);
   font: inherit;
+  transition: border-color 0.2s ease;
 }
 
 .create-group-form input:focus {
   outline: none;
   border-color: var(--color-primary);
+}
+
+.create-group-form input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
 }
 
 .create-group-actions {
@@ -146,12 +234,20 @@
 }
 
 .create-group-actions button {
-  padding: 10px 16px;
+  padding: 10px 17px;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 10px;
   font: inherit;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.create-group-actions button:hover:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .create-group-actions button:first-child {
@@ -172,5 +268,96 @@
 .create-group-error {
   margin: 0;
   color: #d94b4b;
+  font-size: 0.85rem;
+}
+
+/* ========================================
+   Loading and empty states
+======================================== */
+
+.groups-list > p {
+  grid-column: 1 / -1;
+  color: var(--color-text-muted);
   font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ========================================
+   Animations
+======================================== */
+
+@keyframes form-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   Responsive layout
+======================================== */
+
+@media (max-width: 700px) {
+  .groups-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .group-card {
+    max-width: 190px;
+  }
+}
+
+@media (max-width: 480px) {
+  .groups-page {
+    padding: 28px 18px 48px;
+  }
+
+  .groups-page-header {
+    margin-bottom: 32px;
+  }
+
+  .groups-list {
+    gap: 18px;
+  }
+
+  .group-card {
+    max-width: 155px;
+  }
+
+  .group-card-content {
+    gap: 7px;
+    padding: 12px;
+  }
+
+  .group-card-label {
+    font-size: 0.5rem;
+  }
+
+  .group-card h2 {
+    font-size: 0.95rem;
+  }
+
+  .group-card-arrow {
+    display: none;
+  }
+
+  .create-group-form {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 350px) {
+  .groups-list {
+    grid-template-columns: 1fr;
+  }
+
+  .group-card {
+    max-width: 180px;
+  }
 }

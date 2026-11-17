@@ -7,6 +7,8 @@ import GroupsPage from "./features/groups/pages/groupsPage";
 import GroupPage from "./features/groups/pages/groupPage";
 import AuthPage from "./features/auth/pages/authPage";
 import InvitationPage from "./features/invitations/pages/invitationPage";
+import ProfilePage from "./features/profile/pages/profilePage";
+
 
 import { ThemeProvider } from "./features/theme/themeProvider";
 import { AuthProvider } from "./features/auth/authProvider";
@@ -34,6 +36,7 @@ export default function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/groups" element={<GroupsPage />} />
               <Route path="/groups/:groupId" element={<GroupPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Route>
           </Routes>
         </AuthProvider>

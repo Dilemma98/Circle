@@ -1,3 +1,4 @@
+
 import "./homePage.css";
 
 import type { Post } from "../../posts/types/post";
@@ -8,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../auth/authProvider";
 import { getMyGroups } from "../../groups/groupService";
 import type { Group } from "../../groups/types/group";
+
 import {
   createPost,
   uploadPostImage,
@@ -16,13 +18,16 @@ import {
 
 import EmptyFeed from "../components/emptyFeed";
 import CreatePostModal from "../../posts/components/createPostModal";
-import CreatePostButton from "../../posts/components/createPostButton";
+
+import { ImagePlus, PenLine } from "lucide-react";
 
 export default function HomePage() {
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [groupsLoading, setGroupsLoading] = useState(true);
+  const [postsLoading, setPostsLoading] = useState(true);
+
   const { profile } = useAuth();
 
   useEffect(() => {
@@ -41,6 +46,7 @@ export default function HomePage() {
         console.error("Could not load groups:", error);
       } finally {
         setGroupsLoading(false);
+        setPostsLoading(false);
       }
     }
 
@@ -64,6 +70,7 @@ export default function HomePage() {
 
     try {
       savedPost = await createPost(groupId, content);
+
       await Promise.all(
         images.map((image, index) =>
           uploadPostImage(groupId, savedPost.id, image, index),
@@ -73,6 +80,7 @@ export default function HomePage() {
       console.error("Could not create post:", error);
       return;
     }
+
     const newPost: Post = {
       id: savedPost.id,
       groupId,
@@ -92,22 +100,91 @@ export default function HomePage() {
     setPosts((currentPosts) => [newPost, ...currentPosts]);
   }
 
+  const initials =
+    profile?.display_name?.charAt(0).toUpperCase() || "?";
+
   return (
     <div className="home-page">
       <section className="feed-section">
-        {/* <h2>Hej {profile?.display_name ?? "där"}! 👋</h2> */}
-        {/* <FeedToolbar /> */}
 
-        {posts.length === 0 ? (
+        {/* Feed header */}
+        <div className="feed-header">
+          <div>
+            <span className="feed-eyebrow">DIN CIRCLE</span>
+            <h1>Ditt flöde</h1>
+            <p>Se vad som händer bland dina människor.</p>
+          </div>
+
+          <div className="feed-group-count">
+            {groups.length} {groups.length === 1 ? "grupp" : "grupper"}
+          </div>
+        </div>
+
+        {/* Quick post composer */}
+        <div className="quick-post-card">
+          <div className="quick-post-top">
+            <div className="quick-post-avatar">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="" />
+              ) : (
+                <span>{initials}</span>
+              )}
+            </div>
+
+            <button
+              type="button"
+              className="quick-post-input"
+              onClick={handleOpenCreatePost}
+            >
+              Vad vill du dela med dig av?
+            </button>
+          </div>
+
+          <div className="quick-post-bottom">
+            <button
+              type="button"
+              className="quick-post-action"
+              onClick={handleOpenCreatePost}
+            >
+              <ImagePlus size={18} />
+              Foto
+            </button>
+
+            <button
+              type="button"
+              className="quick-post-action"
+              onClick={handleOpenCreatePost}
+            >
+              <PenLine size={17} />
+              Skriv ett inlägg
+            </button>
+          </div>
+        </div>
+
+        {/* Posts */}
+        {postsLoading ? (
+          <div className="feed-loading">
+            <span className="feed-loader" />
+            <p>Laddar ditt flöde...</p>
+          </div>
+        ) : posts.length === 0 ? (
           <EmptyFeed />
         ) : (
           <div className="post-list">
             {posts.map((post) => {
-              const group = groups.find((group) => group.id === post.groupId);
+              const group = groups.find(
+                (group) => group.id === post.groupId,
+              );
 
               if (!group) return null;
 
-              return <PostCard key={post.id} post={post} group={group} />;
+              return (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  group={group}
+                />
+              );
             })}
           </div>
         )}
@@ -119,7 +196,6 @@ export default function HomePage() {
         onCreatePost={handleCreatePost}
         groups={groupsLoading ? [] : groups}
       />
-      <CreatePostButton onClick={handleOpenCreatePost} />
     </div>
   );
 }

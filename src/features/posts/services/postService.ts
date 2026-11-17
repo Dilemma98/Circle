@@ -1,5 +1,7 @@
 import { supabase } from "../../../lib/supabase";
 import type { ImagePreview } from "../hooks/useImagePreviews";
+import type { GroupPhoto } from "../types/post";
+import { getAvatarUrl } from "../../auth/profileService";
 
 export async function createPost(
   groupId: string,
@@ -65,11 +67,11 @@ export async function uploadPostImage(
 }
 
 export async function getGroupPosts(groupIds: string[]) {
-const { data, error } = await supabase
-  .from("posts")
-  .select("*, comments(count)")
-  .in("group_id", groupIds)
-  .order("created_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*, comments(count)")
+    .in("group_id", groupIds)
+    .order("created_at", { ascending: false });
 
   if (error) throw error;
   const postIds = data.map((post) => post.id);
@@ -82,6 +84,13 @@ const { data, error } = await supabase
     .in("id", authorIds);
 
   if (profilesError) throw profilesError;
+
+  const profilesWithAvatars = await Promise.all(
+  profiles.map(async (profile) => ({
+    ...profile,
+    avatar_url: await getAvatarUrl(profile.avatar_url),
+  }))
+);
 
   const { data: mediaData, error: mediaError } = await supabase
     .from("post_media")
@@ -107,17 +116,19 @@ const { data, error } = await supabase
   );
 
   return data.map((post) => {
-    const author = profiles.find((profile) => profile.id === post.author_id);
+    const author = profilesWithAvatars.find(
+  (profile) => profile.id === post.author_id
+);
 
     return {
       id: post.id,
-  groupId: post.group_id,
-  authorId: post.author_id,
-  authorName: author?.display_name ?? "Okänd användare",
-  authorAvatar: author?.avatar_url ?? null,
-  content: post.content,
-  createdAt: post.created_at,
-  commentCount: post.comments?.[0]?.count ?? 0,
+      groupId: post.group_id,
+      authorId: post.author_id,
+      authorName: author?.display_name ?? "Okänd användare",
+      authorAvatar: author?.avatar_url ?? null,
+      content: post.content,
+      createdAt: post.created_at,
+      commentCount: post.comments?.[0]?.count ?? 0,
 
       media: mediaWithUrls
         .filter((media) => media.post_id === post.id)
@@ -129,4 +140,28 @@ const { data, error } = await supabase
         })),
     };
   });
+}
+
+export async function getGroupPhotos(
+  groupId: string,
+): Promise<GroupPhoto[]> {
+  // Get all posts from the selected group.
+  const posts = await getGroupPosts([groupId]);
+
+  // Extract every image from the posts.
+  const photos = posts.flatMap((post) =>
+    post.media
+      .filter((media) => media.type === "image")
+      .map((image) => ({
+        id: image.id,
+        postId: post.id,
+        url: image.url,
+        caption: image.caption,
+        authorName: post.authorName,
+        authorAvatar: post.authorAvatar,
+        createdAt: post.createdAt,
+      })),
+  );
+
+  return photos;
 }

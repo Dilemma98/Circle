@@ -5,44 +5,198 @@
   padding: 32px 24px;
 }
 
+/* Group header */
+
 .group-page-header {
   margin-bottom: 32px;
 }
 
+.group-page-header h1 {
+  margin: 0 0 10px;
+  font-size: 2rem;
+}
+
+.group-page-header p:last-child {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
 .group-page-header .eyebrow {
+  margin-bottom: 8px;
   color: var(--color-primary);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  margin-bottom: 8px;
 }
 
-.group-page-header h1 {
-  font-size: 2rem;
-  margin: 0 0 10px;
+.group-page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-.group-page-header p:last-child {
+/* Group cover image */
+
+.group-cover-image {
+  width: 100%;
+  height: 240px;
+  margin-bottom: 28px;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.group-cover-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Group editing */
+
+.edit-group-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.edit-group-button:hover {
+  background: var(--color-surface-secondary);
+  border-color: var(--color-primary);
+}
+
+.group-settings-panel {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: var(--color-surface);
+  animation: settings-appear 0.2s ease;
+}
+
+.group-settings-section h3 {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+}
+
+.group-settings-section p {
+  margin: 0 0 16px;
   color: var(--color-text-muted);
-  margin: 0;
+  font-size: 0.85rem;
 }
+
+.group-settings-divider {
+  height: 1px;
+  margin: 22px 0;
+  background: var(--color-border);
+}
+
+/* Group color picker */
+
+.group-color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.group-color-option {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.group-color-option:hover {
+  transform: scale(1.12);
+}
+
+.group-color-option.selected {
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 2px var(--color-surface);
+}
+
+.group-color-option:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.group-color-error {
+  margin: 0;
+  color: #e47785;
+  font-size: 0.8rem;
+}
+
+/* Group cover upload */
+
+.group-cover-upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface-secondary);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.group-cover-upload-button:hover {
+  background: var(--color-primary-light);
+}
+
+/* Group feed */
+
+.group-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+/* Group tabs */
 
 .group-tabs {
   display: flex;
   gap: 8px;
-  border-bottom: 1px solid var(--color-border);
   margin-bottom: 28px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .group-tabs button {
   padding: 12px 18px;
+  margin-bottom: -1px;
   border: none;
+  border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--color-text-muted);
   font-weight: 500;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .group-tabs button:hover {
@@ -50,13 +204,15 @@
 }
 
 .group-tabs button.active {
-  color: var(--color-primary);
   border-bottom-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .group-tab-content {
   min-height: 200px;
 }
+
+/* Group members */
 
 .group-members {
   display: flex;
@@ -69,18 +225,18 @@
   align-items: center;
   gap: 14px;
   padding: 14px;
-  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
 
 .group-member-avatar {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
+  width: 44px;
+  height: 44px;
   overflow: hidden;
   border-radius: 50%;
   background: var(--color-primary-light);
@@ -111,6 +267,8 @@
   font-size: 13px;
 }
 
+/* Invite members */
+
 .invite-member {
   margin-bottom: 20px;
 }
@@ -120,9 +278,9 @@
   flex-direction: column;
   gap: 10px;
   padding: 18px;
-  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
 
 .invite-member label {
@@ -134,10 +292,10 @@
 .invite-member input {
   width: 100%;
   padding: 11px 12px;
-  color: var(--color-text);
-  background: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
+  background: var(--color-background);
+  color: var(--color-text);
   font: inherit;
 }
 
@@ -154,7 +312,115 @@
 }
 
 .invite-success {
+  margin-bottom: 16px;
   color: #27834b;
   font-size: 14px;
-  margin-bottom: 16px;
+}
+
+/* Group album */
+
+.group-album {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.group-album-photo {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.group-album-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.group-album-photo:hover img {
+  transform: scale(1.04);
+}
+
+.album-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.album-photo-author {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  border: 2px solid white;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.album-photo-author img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.group-album-empty {
+  color: var(--color-text-muted);
+}
+
+/* Animations */
+
+@keyframes settings-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive layout */
+
+@media (max-width: 700px) {
+  .group-album {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .group-page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .group-settings-panel {
+    padding: 18px;
+  }
+
+  .group-cover-image {
+    height: 170px;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .group-album {
+    gap: 5px;
+  }
 }

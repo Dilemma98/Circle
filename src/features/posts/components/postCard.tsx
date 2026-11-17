@@ -1,6 +1,13 @@
+
 import "./postCard.css";
 
 import { useState } from "react";
+import {
+  Users,
+  MessageCircle,
+  X,
+} from "lucide-react";
+
 import ImageLightbox from "./imageLightbox";
 import ReactionButton from "./reactionButton";
 import CommentSection from "./commentSection";
@@ -13,15 +20,18 @@ interface PostCardProps {
   group: Group;
 }
 
-
 export default function PostCard({ post, group }: PostCardProps) {
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null,
-  );
-  const [showComments, setShowComments] = useState(false);
-  const [commentCount, setCommentCount] = useState(post.commentCount ?? 0);
+  const [selectedImageIndex, setSelectedImageIndex] =
+    useState<number | null>(null);
 
-  const imageMedia = post.media.filter((media) => media.type === "image");
+  const [showComments, setShowComments] = useState(false);
+  const [commentCount, setCommentCount] = useState(
+    post.commentCount ?? 0,
+  );
+
+  const imageMedia = post.media.filter(
+    (media) => media.type === "image",
+  );
 
   function generateInitials() {
     const names = post.authorName.trim().split(/\s+/);
@@ -32,52 +42,89 @@ export default function PostCard({ post, group }: PostCardProps) {
     return (firstInitial + secondInitial).toUpperCase();
   }
 
+  const imageLayout =
+    imageMedia.length === 1
+      ? "single"
+      : imageMedia.length === 2
+        ? "double"
+        : imageMedia.length === 3
+          ? "three"
+          : "multiple";
+
+  const formattedDate = new Date(post.createdAt).toLocaleString(
+    "sv-SE",
+    {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    },
+  );
+
   return (
     <article className="post-card">
-      <div className="post-card-header">
-        {post.authorAvatar !== null && (
-          <img className="user-avatar" src={post.authorAvatar} alt="" />
-        )}
-        {post.authorAvatar === null && (
-          <div className="user-avatar">{generateInitials()}</div>
-        )}
+
+      {/* Post header */}
+      <header className="post-card-header">
+        <div className="post-card-author-avatar">
+          {post.authorAvatar ? (
+            <img src={post.authorAvatar} alt="" />
+          ) : (
+            <span>{generateInitials()}</span>
+          )}
+        </div>
 
         <div className="post-card-author">
           <strong>{post.authorName}</strong>
-          <span>
-            {new Date(post.createdAt).toLocaleString("sv-SE", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </span>
+
+          <time dateTime={post.createdAt}>
+            {formattedDate}
+          </time>
         </div>
 
-        <span className="post-group-tag">{group.name}</span>
-      </div>
+       <div
+  className="post-group-tag"
+  style={{
+    backgroundColor: `${group.color}22`,
+    borderColor: `${group.color}66`,
+    color: group.color,
+  }}
+>
+  <Users size={14} />
+  <span>{group.name}</span>
+</div>
+      </header>
 
-      {post.media.length > 0 && (
-        <div className="post-card-images">
-          {imageMedia.slice(0, 2).map((image, index) => (
-            <div
+      {/* Images */}
+      {imageMedia.length > 0 && (
+        <div
+          className={`post-card-images post-card-images--${imageLayout}`}
+        >
+          {imageMedia.slice(0, 4).map((image, index) => (
+            <button
+              type="button"
               className="post-card-image-wrapper"
               key={image.id}
               onClick={() => setSelectedImageIndex(index)}
+              aria-label={`Visa bild ${index + 1} i helskärm`}
             >
-              <img src={image.url} alt="Bild i inlägg" />
+              <img
+                src={image.url}
+                alt={`Bild ${index + 1} i inlägget`}
+              />
 
-              {index === 1 && imageMedia.length > 2 && (
-                <div className="post-card-image-overlay">
-                  +{imageMedia.length - 2}
-                </div>
+              {index === 3 && imageMedia.length > 4 && (
+                <span className="post-card-image-overlay">
+                  +{imageMedia.length - 4}
+                </span>
               )}
-            </div>
+            </button>
           ))}
         </div>
       )}
 
+      {/* Image lightbox */}
       {selectedImageIndex !== null && (
         <ImageLightbox
           images={imageMedia}
@@ -87,9 +134,15 @@ export default function PostCard({ post, group }: PostCardProps) {
         />
       )}
 
-      {post.content && <p className="post-card-content">{post.content}</p>}
+      {/* Post content */}
+      {post.content && (
+        <p className="post-card-content">
+          {post.content}
+        </p>
+      )}
 
-      <div className="post-card-footer">
+      {/* Post actions */}
+      <footer className="post-card-footer">
         <ReactionButton postId={post.id} />
 
         <button
@@ -98,28 +151,25 @@ export default function PostCard({ post, group }: PostCardProps) {
           onClick={() => setShowComments((open) => !open)}
           aria-expanded={showComments}
           aria-label={
-            commentCount > 0 ? `Kommentarer (${commentCount})` : "Kommentera"
+            commentCount > 0
+              ? `Kommentarer (${commentCount})`
+              : "Kommentera"
           }
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.6-.8L3 21l1.9-5.1A8.4 8.4 0 1 1 21 11.5z" />
-          </svg>
-          {commentCount > 0 && <span>{commentCount}</span>}
-        </button>
-      </div>
+          <MessageCircle size={20} />
 
+          {commentCount > 0 && (
+            <span>{commentCount}</span>
+          )}
+        </button>
+      </footer>
+
+      {/* Comments */}
       {showComments && (
-        <CommentSection postId={post.id} onCountChange={setCommentCount} />
+        <CommentSection
+          postId={post.id}
+          onCountChange={setCommentCount}
+        />
       )}
     </article>
   );

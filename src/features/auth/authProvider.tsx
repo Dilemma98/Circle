@@ -1,9 +1,9 @@
-
 import {
   createContext,
   useContext,
   useEffect,
   useState,
+  useCallback,
   type ReactNode,
 } from "react";
 
@@ -18,8 +18,8 @@ interface AuthContextType {
   session: Session | null;
   profile: Profile | null;
   loading: boolean;
+  refreshProfile: () => Promise<void>;
 }
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
@@ -31,25 +31,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<Profile | null>(null);
 
-useEffect(() => {
-  // Listen for changes to the user's authentication state.
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange((_event, session) => {
-    setSession(session);
-    setLoading(false);
-  });
-
-  return () => {
-    subscription.unsubscribe();
-  };
-}, []);
-
-  const user = session?.user ?? null;
-
-  useEffect(() => {
-  async function loadProfile() {
-    if (!user) {
+  const refreshProfile = useCallback(async () => {
+    if (!session?.user) {
       setProfile(null);
       return;
     }
@@ -61,13 +44,32 @@ useEffect(() => {
       console.error("Could not load profile:", error);
       setProfile(null);
     }
-  }
+  }, [session?.user?.id]);
 
-  loadProfile();
-}, [user?.id]);
+  useEffect(() => {
+    // Listen for changes to the user's authentication state.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const user = session?.user ?? null;
+
+  useEffect(() => {
+    refreshProfile();
+  }, [refreshProfile]);
 
   return (
-    <AuthContext.Provider value={{ user, session, profile, loading }}>
+    <AuthContext.Provider
+      value={{ user, session, profile, loading, refreshProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );

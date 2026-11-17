@@ -22,3 +22,13 @@ export type PostMedia =
       type: "video";
       url: string;
     };
+
+    export interface GroupPhoto{
+      id: string;
+      postId: string;
+      url: string;
+      caption?: string;
+      authorName: string;
+      authorAvatar: string | null;
+      createdAt: string;
+    }

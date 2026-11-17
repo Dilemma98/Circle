@@ -1,8 +1,10 @@
+
 .post-card {
   padding: 22px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: 18px;
   background: var(--color-surface);
+  box-shadow: var(--shadow-card);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -14,63 +16,104 @@
     var(--color-primary) 35%,
     var(--color-border)
   );
-  box-shadow: var(--shadow-card);
 }
+
+/* Header */
 
 .post-card-header {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
+}
+
+.post-card-author-avatar {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface-secondary);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.post-card-author-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .post-card-author {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
 }
 
 .post-card-author strong {
-  font-size: 0.9rem;
+  overflow: hidden;
+  color: var(--color-text);
+  font-size: 0.92rem;
   font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.post-card-author span {
+.post-card-author time {
   color: var(--color-text-muted);
-  font-size: 0.78rem;
+  font-size: 0.77rem;
 }
 
 .post-group-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 40%;
+  padding: 9px 13px;
   margin-left: auto;
-  padding: 6px 11px;
-  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
   background: var(--color-primary-light);
   color: var(--color-primary);
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 650;
   white-space: nowrap;
 }
 
-.post-card-content {
-  margin: 20px 0 0;
-  color: var(--color-text);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
+.post-group-tag svg {
+  flex-shrink: 0;
 }
+
+.post-group-tag span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Image gallery */
 
 .post-card-images {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 18px;
+  gap: 8px;
+  margin-top: 20px;
+  overflow: hidden;
+  border-radius: 14px;
 }
 
 .post-card-image-wrapper {
   position: relative;
+  display: block;
+  min-width: 0;
+  padding: 0;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
+  border: none;
+  background: var(--color-surface-secondary);
   cursor: zoom-in;
 }
 
@@ -79,46 +122,121 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 
 .post-card-image-wrapper:hover img {
-  transform: scale(1.02);
+  transform: scale(1.035);
 }
+
+.post-card-image-wrapper:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+/* One image */
+
+.post-card-images--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.post-card-images--single .post-card-image-wrapper {
+  width: 100%;
+  max-height: 520px;
+  aspect-ratio: 16 / 9;
+}
+
+/* Two images */
+
+.post-card-images--double {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.post-card-images--double .post-card-image-wrapper {
+  aspect-ratio: 4 / 3;
+}
+
+/* Three images */
+
+.post-card-images--three {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.post-card-images--three .post-card-image-wrapper {
+  aspect-ratio: 4 / 3;
+}
+
+.post-card-images--three .post-card-image-wrapper:nth-child(3) {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 9;
+}
+
+/* Four or more images */
+
+.post-card-images--multiple {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.post-card-images--multiple .post-card-image-wrapper {
+  aspect-ratio: 4 / 3;
+}
+
+/* More images overlay */
 
 .post-card-image-overlay {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgb(0 0 0 / 55%);
+  background: rgb(0 0 0 / 58%);
   color: white;
   font-size: 2rem;
   font-weight: 650;
   pointer-events: none;
 }
 
-/* Footer: hjärta till vänster, kommentarer till höger */
+/* Post text */
+
+.post-card-content {
+  margin: 19px 0 0;
+  color: var(--color-text);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* Footer */
+
 .post-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 12px -12px -8px;   /* negativ marginal så ikonerna linjerar med texten */
+  padding-top: 12px;
+  margin-top: 15px;
+  border-top: 1px solid var(--color-border);
 }
 
 .reaction-button,
 .post-card-comment-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
+  justify-content: center;
+  gap: 7px;
+  min-width: 42px;
+  min-height: 40px;
+  padding: 8px 11px;
   border: none;
-  border-radius: var(--radius-pill);
+  border-radius: 10px;
   background: transparent;
   color: var(--color-text-muted);
+  font-size: 0.88rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  transition: background 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .reaction-button:hover,
@@ -129,16 +247,56 @@
   color: var(--color-primary);
 }
 
+.reaction-button:active,
+.post-card-comment-button:active {
+  transform: scale(0.94);
+}
+
+/* Responsive */
+
 @media (max-width: 600px) {
   .post-card {
-    padding: 18px;
+    padding: 16px;
+    border-radius: 15px;
+  }
+
+  .post-card-author-avatar {
+    width: 42px;
+    height: 42px;
+  }
+
+  .post-card-author strong {
+    font-size: 0.86rem;
+  }
+
+  .post-card-author time {
+    font-size: 0.72rem;
+  }
+
+  .post-group-tag {
+    max-width: 38%;
+    padding: 7px 9px;
+    font-size: 0.7rem;
+    border: 1px solid transparent;
+  }
+
+  .post-card-images {
+    gap: 5px;
+    margin-top: 16px;
+    border-radius: 11px;
+  }
+
+  .post-card-images--single .post-card-image-wrapper {
+    aspect-ratio: 4 / 3;
   }
 
   .post-card-content {
-    margin-top: 16px;
+    margin-top: 15px;
+    font-size: 0.9rem;
   }
 
   .post-card-footer {
-    margin: 10px -10px -6px;
+    padding-top: 9px;
+    margin-top: 12px;
   }
 }
