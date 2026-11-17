@@ -38,7 +38,6 @@ export default function AuthPage() {
           return;
         }
 
-        setEmail(invitation.email);
       } catch (error) {
         console.error("Could not load invitation:", error);
         setError("Det gick inte att hämta inbjudan.");
@@ -144,7 +143,6 @@ export default function AuthPage() {
                   : "namn@example.com"
               }
               required
-              readOnly={Boolean(invitationToken)}
             />
           </div>
 

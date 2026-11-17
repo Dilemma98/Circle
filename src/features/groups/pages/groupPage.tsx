@@ -46,10 +46,10 @@ export default function GroupPage() {
     (member) => member.user_id === user?.id && member.role === "owner",
   );
   const [showInviteForm, setShowInviteForm] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState("");
   const [sendingInvitation, setSendingInvitation] = useState(false);
   const [inviteError, setInviteError] = useState("");
   const [inviteSuccess, setInviteSuccess] = useState("");
+  const [invitationUrl, setInvitationUrl] = useState("");
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(false);
@@ -190,26 +190,26 @@ export default function GroupPage() {
     }
   }
 
-  async function handleSendInvitation(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  async function handleSendInvitation() {
     if (!groupId) return;
 
     setSendingInvitation(true);
     setInviteError("");
     setInviteSuccess("");
+    setInvitationUrl("");
 
     try {
-      await sendInvitation(groupId, inviteEmail);
+      const result = await sendInvitation(groupId);
 
-      setInviteSuccess("Inbjudan har skickats!");
-      setInviteEmail("");
-      setShowInviteForm(false);
+      setInvitationUrl(result.invitationUrl);
+      setInviteSuccess("Inbjudningslänken har skapats!");
     } catch (error) {
-      console.error("Could not send invitation:", error);
+      console.error("Could not create invitation:", error);
 
       setInviteError(
-        error instanceof Error ? error.message : "Kunde inte skicka inbjudan.",
+        error instanceof Error
+          ? error.message
+          : "Kunde inte skapa inbjudningslänk.",
       );
     } finally {
       setSendingInvitation(false);
@@ -240,10 +240,10 @@ export default function GroupPage() {
   return (
     <div className="group-page">
       {group.coverImage && (
-  <div className="group-cover-image">
-    <img src={group.coverImage} alt={`Omslagsbild för ${group.name}`} />
-  </div>
-)}
+        <div className="group-cover-image">
+          <img src={group.coverImage} alt={`Omslagsbild för ${group.name}`} />
+        </div>
+      )}
       <header className="group-page-header">
         <div className="group-page-heading">
           <div>
@@ -419,25 +419,51 @@ export default function GroupPage() {
                       setShowInviteForm(true);
                       setInviteError("");
                       setInviteSuccess("");
+                      setInvitationUrl("");
                     }}
                   >
                     + Bjud in medlem
                   </button>
                 ) : (
-                  <form onSubmit={handleSendInvitation}>
-                    <label htmlFor="inviteEmail">E-postadress</label>
-
-                    <input
-                      id="inviteEmail"
-                      type="email"
-                      value={inviteEmail}
-                      onChange={(event) => setInviteEmail(event.target.value)}
-                      placeholder="namn@exempel.se"
-                      required
-                    />
+                  <div className="invite-form">
+                    <h3>Bjud in till gruppen</h3>
+                    <p>
+                      Skapa en personlig inbjudningslänk som du kan dela via
+                      SMS, Messenger eller på annat sätt.
+                    </p>
 
                     {inviteError && (
                       <p className="invite-error">{inviteError}</p>
+                    )}
+
+                    {inviteSuccess && (
+                      <p className="invite-success">{inviteSuccess}</p>
+                    )}
+
+                    {invitationUrl && (
+                      <div className="invitation-link-container">
+                        <input type="text" value={invitationUrl} readOnly />
+
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              await navigator.clipboard.writeText(
+                                invitationUrl,
+                              );
+                              setInviteSuccess("Länken har kopierats!");
+                            } catch (error) {
+                              console.error(
+                                "Could not copy invitation link:",
+                                error,
+                              );
+                              setInviteError("Kunde inte kopiera länken.");
+                            }
+                          }}
+                        >
+                          Kopiera länk
+                        </button>
+                      </div>
                     )}
 
                     <div className="invite-actions">
@@ -445,18 +471,27 @@ export default function GroupPage() {
                         type="button"
                         onClick={() => {
                           setShowInviteForm(false);
-                          setInviteEmail("");
                           setInviteError("");
+                          setInviteSuccess("");
+                          setInvitationUrl("");
                         }}
                       >
-                        Avbryt
+                        Stäng
                       </button>
 
-                      <button type="submit" disabled={sendingInvitation}>
-                        {sendingInvitation ? "Skickar..." : "Skicka inbjudan"}
-                      </button>
+                      {!invitationUrl && (
+                        <button
+                          type="button"
+                          onClick={handleSendInvitation}
+                          disabled={sendingInvitation}
+                        >
+                          {sendingInvitation
+                            ? "Skapar länk..."
+                            : "Skapa inbjudningslänk"}
+                        </button>
+                      )}
                     </div>
-                  </form>
+                  </div>
                 )}
               </div>
             )}

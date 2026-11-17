@@ -17,7 +17,6 @@ export default function InvitationPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-
   async function handleAcceptInvitation() {
     if (!token) return;
 
@@ -94,8 +93,6 @@ export default function InvitationPage() {
 
   const isExpired = new Date(invitation.expires_at) < new Date();
   const isAccepted = invitation.accepted_at !== null;
-  const isWrongAccount =
-    user.email?.toLowerCase() !== invitation.email.toLowerCase();
 
   return (
     <main>
@@ -109,10 +106,6 @@ export default function InvitationPage() {
         <p>Den här inbjudan har redan accepterats.</p>
       ) : isExpired ? (
         <p>Den här inbjudan har gått ut.</p>
-      ) : isWrongAccount ? (
-        <p>
-          Oops, det ser ut som den här inbjudan var menad för någon annan.
-        </p>
       ) : (
         <>
           <button onClick={handleAcceptInvitation} disabled={accepting}>
