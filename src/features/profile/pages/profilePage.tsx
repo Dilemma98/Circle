@@ -5,6 +5,9 @@ import {
   updateMyProfile,
   uploadProfileAvatar,
 } from "../../auth/profileService";
+import ThemeToggle from "../../../components/common/themeToggle";
+import { supabase } from "../../../lib/supabase";
+
 import "./profilePage.css";
 
 export default function ProfilePage() {
@@ -19,6 +22,11 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+
+   async function handleLogout() {
+    const { error } = await supabase.auth.signOut();
+    if (error) console.error("Could not sign out:", error);
+  }
 
   // Keep the input synchronized when the profile loads or changes.
   useEffect(() => {
@@ -263,6 +271,12 @@ export default function ProfilePage() {
           <code>{user?.id}</code>
         </div>
       </section>
+
+       <ThemeToggle />
+      
+              <button className="logout" onClick={handleLogout}>
+                Logga ut
+              </button>
 
       {message && (
         <p className="profile-message">{message}</p>

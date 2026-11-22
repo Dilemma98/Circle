@@ -1,5 +1,5 @@
 .app-header {
-  position: sticky;
+  position: sticky;      /* top: 0 gör ingenting utan position */
   top: 0;
   z-index: 20;
   height: 72px;
@@ -7,57 +7,39 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: row; 
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
-}
-
-.dev-logout{
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.4rem;
+  gap: 12px;
+  font-size: 1rem;
   font-weight: 750;
-  letter-spacing: -1px;
+  letter-spacing: 0.3em;
+  flex-direction: row; 
 }
 
 .logo-icon {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  background: var(--color-primary);
-  color: white;
-  font-size: 1.5rem;
+  height: 28px;
+  width: auto;           /* behåller ringarnas proportioner */
+  /* display: block; */
 }
 
-.user-avatar {
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  background: var(--color-surface-secondary);
-  color: var(--color-text);
-  font-size: 0.9rem;
-  font-weight: 650;
+.app-header .logo {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
 }
 
 @media (max-width: 600px) {
   .app-header {
     height: 64px;
     padding: 0 18px;
+  }
+  .logo-icon {
+    height: 24px;
   }
 }

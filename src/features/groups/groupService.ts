@@ -87,6 +87,23 @@ export async function updateGroupColor(
   if (error) throw error;
 }
 
+async function getAvatarUrl(
+  storagePath: string | null,
+): Promise<string | null> {
+  if (!storagePath) return null;
+
+  // If the URL is already valid, return it.
+  if (storagePath.startsWith("http")) return storagePath;
+
+  const { data, error } = await supabase.storage
+    .from("circle-media")
+    .createSignedUrl(storagePath, 3600);
+
+  if (error) throw error;
+
+  return data.signedUrl;
+}
+
 export async function getGroupMembers(
   groupId: string
 ): Promise<GroupMember[]> {
@@ -111,17 +128,19 @@ export async function getGroupMembers(
 
   if (profilesError) throw profilesError;
 
-  return members.map((member) => {
+return Promise.all(
+  members.map(async (member) => {
     const profile = profiles?.find(
-      (profile) => profile.id === member.user_id
+      (profile) => profile.id === member.user_id,
     );
 
     return {
       ...member,
       display_name: profile?.display_name ?? null,
-      avatar_url: profile?.avatar_url ?? null,
+      avatar_url: await getAvatarUrl(profile?.avatar_url ?? null),
     };
-  });
+  }),
+);
 }
 // Create a signed URL for a group's cover image.
 export async function getGroupCoverUrl(

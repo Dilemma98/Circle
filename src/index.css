@@ -51,6 +51,12 @@
 html {
   min-width: 320px;
   min-height: 100%;
+  scrollbar-width: none;       /* Firefox och nyare Chrome */
+  -ms-overflow-style: none;    /* gamla Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari, Edge */
 }
 
 body {

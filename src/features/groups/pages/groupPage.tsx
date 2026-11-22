@@ -136,7 +136,6 @@ export default function GroupPage() {
         setLoading(false);
       }
     }
-
     loadGroup();
   }, [groupId]);
 
@@ -153,6 +152,7 @@ export default function GroupPage() {
     } finally {
       setMembersLoading(false);
     }
+
   }
 
   async function loadPosts() {
@@ -198,6 +198,15 @@ export default function GroupPage() {
       loadPhotos();
     }
   }, [activeTab, groupId]);
+  
+  useEffect(() =>{
+     if(activeTab === "members"){
+      console.log("members", members)
+      members.map((member) =>(
+        console.log("MEMBER_AVATARURL", member.display_name, member.avatar_url)
+      ))
+  } 
+  })
 
   if (loading) {
     return <p>Hämtar gruppen...</p>;

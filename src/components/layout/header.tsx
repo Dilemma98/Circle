@@ -1,35 +1,13 @@
 import "./header.css";
-import ThemeToggle from "../common/themeToggle";
-import { supabase } from "../../lib/supabase";
+import logo from "../../assets/header-logo.svg";
 
 export default function Header() {
-
-  async function handleLogout() {
-    const { error } = await supabase.auth.signOut();
-    if (error) console.error("Could not sign out:", error);
-  }
   return (
     <header className="app-header">
-      <div className="logo">
-        <span className="logo-icon">○</span>
+      <a className="logo" href="/">
+        <img className="logo-icon" src={logo} alt="" />
         <span>Circle</span>
-      </div>
-
-      <div className="header-actions">
-        <ThemeToggle />
-
-        {/* <div className="user-profile">
-          {profile?.avatar_url ? (
-            <img className="user-avatar" src={profile.avatar_url} alt={name} />
-          ) : (
-            <div className="user-avatar">{initial}</div>
-          )}
-        </div> */}
-
-        <button className="dev-logout" onClick={handleLogout}>
-          Logga ut
-        </button>
-      </div>
+      </a>
     </header>
   );
 }

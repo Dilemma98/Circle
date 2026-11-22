@@ -1,21 +1,51 @@
-.theme-toggle {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  background: var(--color-surface);
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  margin: 2em 0.5em;
+}
+
+.theme-toggle-label {
+  font-size: 0.95rem;
   color: var(--color-text);
-  font-size: 1.4rem;
+}
+
+.theme-toggle {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.theme-toggle:hover {
-  background: var(--color-surface-secondary);
+.theme-toggle.active {
+  background: var(--color-primary);
   border-color: var(--color-primary);
 }
 
-.theme-toggle span {
-  line-height: 1;
+.theme-toggle-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle.active .theme-toggle-slider {
+  transform: translateX(16px);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
