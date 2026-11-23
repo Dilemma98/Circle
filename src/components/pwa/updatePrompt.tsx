@@ -3,10 +3,26 @@ import "./updatePrompt.css";
 
 export default function UpdatePrompt() {
   const {
-    needRefresh: [needRefresh, setNeedRefresh],
-    updateServiceWorker,
-  } = useRegisterSW({
-    });
+  needRefresh: [needRefresh, setNeedRefresh],
+  updateServiceWorker,
+} = useRegisterSW({
+  onRegisteredSW(swUrl, registration) {
+    console.log("SW registered:", swUrl);
+    console.log("SW registration:", registration);
+  },
+
+  onRegisterError(error) {
+    console.error("SW registration error:", error);
+  },
+
+  onNeedRefresh() {
+    console.log("🟣 A new version is available!");
+  },
+
+  onOfflineReady() {
+    console.log("🟢 Circle is ready to work offline!");
+  },
+});
 
   // Hide the update prompt
   const close = () => {
