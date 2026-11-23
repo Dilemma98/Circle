@@ -9,6 +9,7 @@ import AuthPage from "./features/auth/pages/authPage";
 import InvitationPage from "./features/invitations/pages/invitationPage";
 import ProfilePage from "./features/profile/pages/profilePage";
 
+import UpdatePrompt from "./components/pwa/updatePrompt";
 
 import { ThemeProvider } from "./features/theme/themeProvider";
 import { AuthProvider } from "./features/auth/authProvider";
@@ -19,6 +20,7 @@ export default function App() {
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
+          <UpdatePrompt />
           <Routes>
             {/* Public route */}
             <Route path="/login" element={<AuthPage />} />

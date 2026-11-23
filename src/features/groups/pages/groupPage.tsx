@@ -15,7 +15,7 @@ import {
 } from "../../posts/services/postService";
 import type { Post, GroupPhoto } from "../../posts/types/post";
 import PostCard from "../../posts/components/postCard";
-import InvitationPanel from "./invitationPanel";
+import InvitationPanel from "../components/invitationPanel";
 
 import "./groupPage.css";
 

@@ -1,9 +1,10 @@
 import { supabase } from "../../../lib/supabase";
+import { getAvatarUrl } from "../../../lib/getAvatarUrl";
 
 export const LIKE = "like";
 
 export async function getReactionSummary(postId: string, userId: string) {
-  const { data, error } = await supabase
+  const { data: reactions, error } = await supabase
     .from("reactions")
     .select("user_id")
     .eq("post_id", postId)
@@ -11,10 +12,34 @@ export async function getReactionSummary(postId: string, userId: string) {
 
   if (error) throw error;
 
-  const rows = data ?? [];
+  const rows = reactions ?? [];
+  const userIds = rows.map((row) => row.user_id);
+
+  let profiles: {
+    id: string;
+    display_name: string;
+    avatar_url: string | null;
+  }[] = [];
+
+  if (userIds.length > 0) {
+    const { data, error: profileError } = await supabase
+      .from("profiles")
+      .select("id, display_name, avatar_url")
+      .in("id", userIds);
+
+    if (profileError) throw profileError;
+
+    profiles = await Promise.all(
+  (data ?? []).map(async (profile) => ({
+    ...profile,
+    avatar_url: await getAvatarUrl(profile.avatar_url),
+  }))
+);
+  }
   return {
     count: rows.length,
     reacted: rows.some((row) => row.user_id === userId),
+    profiles,
   };
 }
 

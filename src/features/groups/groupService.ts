@@ -1,5 +1,6 @@
 import { supabase } from "../../lib/supabase";
 import type { Group } from "./types/group";
+import { getAvatarUrl } from "../../lib/getAvatarUrl";
 
 export interface GroupMember {
   user_id: string;
@@ -85,23 +86,6 @@ export async function updateGroupColor(
     .eq("id", groupId);
 
   if (error) throw error;
-}
-
-async function getAvatarUrl(
-  storagePath: string | null,
-): Promise<string | null> {
-  if (!storagePath) return null;
-
-  // If the URL is already valid, return it.
-  if (storagePath.startsWith("http")) return storagePath;
-
-  const { data, error } = await supabase.storage
-    .from("circle-media")
-    .createSignedUrl(storagePath, 3600);
-
-  if (error) throw error;
-
-  return data.signedUrl;
 }
 
 export async function getGroupMembers(

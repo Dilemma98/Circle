@@ -6,6 +6,7 @@ import {
   getReactionSummary,
   removeReaction,
 } from "../services/reactionService";
+import "./reactionButton.css";
 
 interface ReactionButtonProps {
   postId: string;
@@ -19,17 +20,29 @@ export default function ReactionButton({ postId }: ReactionButtonProps) {
   const [reacted, setReacted] = useState(false);
   const [busy, setBusy] = useState(false);
 
+  const [profiles, setProfiles] = useState<
+  { id: string; display_name: string; avatar_url: string | null }[]
+>([]);
+
+// useEffect(() =>{
+//   console.log(user);
+// })
+
   useEffect(() => {
     if (!userId) return;
     let cancelled = false;
 
-    getReactionSummary(postId, userId)
+    getReactionSummary(postId, userId,)
       .then((summary) => {
         if (cancelled) return;
         setCount(summary.count);
         setReacted(summary.reacted);
+        setProfiles(summary.profiles);
+console.log("Reaction profiles:", summary.profiles);
       })
       .catch((err) => console.error("Could not load reactions:", err));
+
+    
 
     return () => {
       cancelled = true;
@@ -58,10 +71,12 @@ export default function ReactionButton({ postId }: ReactionButtonProps) {
       setCount((c) => c + (wasReacted ? 1 : -1));
     } finally {
       setBusy(false);
+       console.log("reaktion!!!", wasReacted, "postId", postId, "userId", userId)
     }
   }
 
-  return (
+return (
+  <div className="reaction-wrapper">
     <button
       type="button"
       className="reaction-button"
@@ -82,7 +97,38 @@ export default function ReactionButton({ postId }: ReactionButtonProps) {
       >
         <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z" />
       </svg>
+
       {count > 0 && <span>{count}</span>}
     </button>
-  );
+
+    {profiles.length > 0 && (
+      <div className="reaction-avatars">
+        {profiles.slice(0, 4).map((profile) => (
+          <div
+            className="reaction-avatar"
+            key={profile.id}
+            title={profile.display_name}
+          >
+            {profile.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={profile.display_name}
+              />
+            ) : (
+              <span>
+                {profile.display_name?.charAt(0).toUpperCase() ?? "?"}
+              </span>
+            )}
+          </div>
+        ))}
+
+        {profiles.length > 4 && (
+          <span className="reaction-more">
+            +{profiles.length - 4}
+          </span>
+        )}
+      </div>
+    )}
+  </div>
+);
 }
