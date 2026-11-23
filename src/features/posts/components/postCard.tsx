@@ -1,8 +1,10 @@
+
 import "./postCard.css";
 
 import { useState } from "react";
 import { Users, MessageCircle } from "lucide-react";
 
+import Avatar from "../../../components/avatar";
 import ImageLightbox from "./imageLightbox";
 import ReactionButton from "./reactionButton";
 import CommentSection from "./commentSection";
@@ -25,15 +27,6 @@ export default function PostCard({ post, group }: PostCardProps) {
 
   const imageMedia = post.media.filter((media) => media.type === "image");
 
-  function generateInitials() {
-    const names = post.authorName.trim().split(/\s+/);
-
-    const firstInitial = names[0]?.charAt(0) ?? "";
-    const secondInitial = names[1]?.charAt(0) ?? "";
-
-    return (firstInitial + secondInitial).toUpperCase();
-  }
-
   const imageLayout =
     imageMedia.length === 1
       ? "single"
@@ -55,13 +48,11 @@ export default function PostCard({ post, group }: PostCardProps) {
     <article className="post-card">
       {/* Post header */}
       <header className="post-card-header">
-        <div className="post-card-author-avatar">
-          {post.authorAvatar ? (
-            <img src={post.authorAvatar} alt="" />
-          ) : (
-            <span>{generateInitials()}</span>
-          )}
-        </div>
+        <Avatar
+          src={post.authorAvatar}
+          name={post.authorName}
+          size={48}
+        />
 
         <div className="post-card-author">
           <strong>{post.authorName}</strong>
@@ -116,7 +107,9 @@ export default function PostCard({ post, group }: PostCardProps) {
       )}
 
       {/* Post content */}
-      {post.content && <p className="post-card-content">{post.content}</p>}
+      {post.content && (
+        <p className="post-card-content">{post.content}</p>
+      )}
 
       {/* Post actions */}
       <footer className="post-card-footer">

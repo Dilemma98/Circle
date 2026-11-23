@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import {
   getGroupById,
   getGroupMembers,
@@ -7,15 +8,19 @@ import {
   uploadGroupCover,
   type GroupMember,
 } from "../groupService";
+
 import type { Group } from "../types/group";
 import { useAuth } from "../../auth/authProvider";
+
 import {
   getGroupPosts,
   getGroupPhotos,
 } from "../../posts/services/postService";
+
 import type { Post, GroupPhoto } from "../../posts/types/post";
 import PostCard from "../../posts/components/postCard";
 import InvitationPanel from "../components/invitationPanel";
+import Avatar from "../../../components/avatar";
 
 import "./groupPage.css";
 
@@ -42,6 +47,7 @@ export default function GroupPage() {
 
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [membersLoading, setMembersLoading] = useState(false);
+
   const isOwner = members.some(
     (member) => member.user_id === user?.id && member.role === "owner",
   );
@@ -94,7 +100,9 @@ export default function GroupPage() {
     }
   }
 
-  async function handleCoverUpload(event: React.ChangeEvent<HTMLInputElement>) {
+  async function handleCoverUpload(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
     const file = event.target.files?.[0];
 
     if (!file || !groupId) return;
@@ -136,6 +144,7 @@ export default function GroupPage() {
         setLoading(false);
       }
     }
+
     loadGroup();
   }, [groupId]);
 
@@ -152,7 +161,6 @@ export default function GroupPage() {
     } finally {
       setMembersLoading(false);
     }
-
   }
 
   async function loadPosts() {
@@ -198,15 +206,6 @@ export default function GroupPage() {
       loadPhotos();
     }
   }, [activeTab, groupId]);
-  
-  useEffect(() =>{
-     if(activeTab === "members"){
-      console.log("members", members)
-      members.map((member) =>(
-        console.log("MEMBER_AVATARURL", member.display_name, member.avatar_url)
-      ))
-  } 
-  })
 
   if (loading) {
     return <p>Hämtar gruppen...</p>;
@@ -215,13 +214,18 @@ export default function GroupPage() {
   if (!group) {
     return <p>Gruppen kunde inte hittas.</p>;
   }
+
   return (
     <div className="group-page">
       {group.coverImage && (
         <div className="group-cover-image">
-          <img src={group.coverImage} alt={`Omslagsbild för ${group.name}`} />
+          <img
+            src={group.coverImage}
+            alt={`Omslagsbild för ${group.name}`}
+          />
         </div>
       )}
+
       <header className="group-page-header">
         <div className="group-page-heading">
           <div>
@@ -267,7 +271,9 @@ export default function GroupPage() {
                 ))}
               </div>
 
-              {colorError && <p className="group-color-error">{colorError}</p>}
+              {colorError && (
+                <p className="group-color-error">{colorError}</p>
+              )}
             </div>
 
             <div className="group-settings-divider" />
@@ -293,7 +299,9 @@ export default function GroupPage() {
                 onChange={handleCoverUpload}
               />
 
-              {coverError && <p className="group-color-error">{coverError}</p>}
+              {coverError && (
+                <p className="group-color-error">{coverError}</p>
+              )}
             </div>
           </div>
         )}
@@ -365,18 +373,12 @@ export default function GroupPage() {
                           alt={photo.caption || "Bild i gruppens album"}
                         />
 
-                        <div className="album-photo-author">
-                          {photo.authorAvatar ? (
-                            <img
-                              src={photo.authorAvatar}
-                              alt={photo.authorName}
-                            />
-                          ) : (
-                            <span>
-                              {photo.authorName.charAt(0).toUpperCase()}
-                            </span>
-                          )}
-                        </div>
+                        <Avatar
+                          src={photo.authorAvatar}
+                          name={photo.authorName}
+                          size={32}
+                          className="album-photo-author"
+                        />
                       </div>
                     ))}
                   </div>
@@ -396,15 +398,12 @@ export default function GroupPage() {
               ) : (
                 members.map((member) => (
                   <div className="group-member" key={member.user_id}>
-                    <div className="group-member-avatar">
-                      {member.avatar_url ? (
-                        <img src={member.avatar_url} alt="" />
-                      ) : (
-                        <span>
-                          {member.display_name?.charAt(0).toUpperCase() ?? "?"}
-                        </span>
-                      )}
-                    </div>
+                    <Avatar
+                      src={member.avatar_url}
+                      name={member.display_name ?? ""}
+                      size={44}
+                      className="group-member-avatar"
+                    />
 
                     <div className="group-member-info">
                       <strong>

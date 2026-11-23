@@ -18,6 +18,7 @@ import {
 
 import EmptyFeed from "../components/emptyFeed";
 import CreatePostModal from "../../posts/components/createPostModal";
+import Avatar from "../../../components/avatar";
 
 import { ImagePlus, PenLine } from "lucide-react";
 
@@ -100,13 +101,9 @@ export default function HomePage() {
     setPosts((currentPosts) => [newPost, ...currentPosts]);
   }
 
-  const initials =
-    profile?.display_name?.charAt(0).toUpperCase() || "?";
-
   return (
     <div className="home-page">
       <section className="feed-section">
-
         {/* Feed header */}
         <div className="feed-header">
           <div>
@@ -123,13 +120,11 @@ export default function HomePage() {
         {/* Quick post composer */}
         <div className="quick-post-card">
           <div className="quick-post-top">
-            <div className="quick-post-avatar">
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="" />
-              ) : (
-                <span>{initials}</span>
-              )}
-            </div>
+            <Avatar
+              src={profile?.avatar_url ?? null}
+              name={profile?.display_name ?? ""}
+              size={43}
+            />
 
             <button
               type="button"

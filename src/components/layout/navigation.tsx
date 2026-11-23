@@ -1,7 +1,9 @@
+
 import { NavLink } from "react-router-dom";
-import { House, Users, UserRound } from "lucide-react";
+import { House, Users } from "lucide-react";
 
 import { useAuth } from "../../features/auth/authProvider";
+import Avatar from "../avatar";
 
 import "./navigation.css";
 
@@ -19,15 +21,13 @@ export default function Navigation() {
       </NavLink>
 
       <NavLink to="/profile" aria-label="Profil" title="Profil">
-        {profile?.avatar_url ? (
-          <img
-            src={profile.avatar_url}
-            alt=""
-            className="navigation-avatar"
-          />
-        ) : (
-          <UserRound />
-        )}
+        <Avatar
+          src={profile?.avatar_url ?? null}
+          name={profile?.display_name ?? ""}
+          size={32}
+          fallback="icon"
+          className="navigation-avatar"
+        />
       </NavLink>
     </nav>
   );

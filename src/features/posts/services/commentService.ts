@@ -1,18 +1,19 @@
 import { supabase } from "../../../lib/supabase";
+import { getAvatarUrl } from "../../../lib/getAvatarUrl";
 import type { Comment } from "../types/comment";
 
 const COMMENT_SELECT =
   "id, post_id, content, created_at, author:profiles(display_name, avatar_url)";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapComment(row: any): Comment {
+async function mapComment(row: any): Promise<Comment> {
   return {
     id: row.id,
     postId: row.post_id,
     content: row.content,
     createdAt: row.created_at,
     authorName: row.author?.display_name ?? "Okänd",
-    authorAvatar: row.author?.avatar_url ?? null,
+    authorAvatar: await getAvatarUrl(row.author?.avatar_url ?? null),
   };
 }
 
@@ -24,7 +25,7 @@ export async function getComments(postId: string): Promise<Comment[]> {
     .order("created_at", { ascending: true });
 
   if (error) throw error;
-  return (data ?? []).map(mapComment);
+  return Promise.all((data ?? []).map(mapComment));
 }
 
 export async function addComment(
