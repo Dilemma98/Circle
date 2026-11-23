@@ -1,11 +1,13 @@
+
 import { useEffect, useState } from "react";
 
-import { useAuth } from "../../auth/authProvider"; // justera sökvägen
+import { useAuth } from "../../auth/authProvider";
 import {
   addReaction,
   getReactionSummary,
   removeReaction,
 } from "../services/reactionService";
+import Avatar from "../../../components/avatar";
 import "./reactionButton.css";
 
 interface ReactionButtonProps {
@@ -21,28 +23,24 @@ export default function ReactionButton({ postId }: ReactionButtonProps) {
   const [busy, setBusy] = useState(false);
 
   const [profiles, setProfiles] = useState<
-  { id: string; display_name: string; avatar_url: string | null }[]
->([]);
-
-// useEffect(() =>{
-//   console.log(user);
-// })
+    { id: string; display_name: string; avatar_url: string | null }[]
+  >([]);
 
   useEffect(() => {
     if (!userId) return;
+
     let cancelled = false;
 
-    getReactionSummary(postId, userId,)
+    getReactionSummary(postId, userId)
       .then((summary) => {
         if (cancelled) return;
+
         setCount(summary.count);
         setReacted(summary.reacted);
         setProfiles(summary.profiles);
-console.log("Reaction profiles:", summary.profiles);
+        console.log("Reaction profiles:", summary.profiles);
       })
       .catch((err) => console.error("Could not load reactions:", err));
-
-    
 
     return () => {
       cancelled = true;
@@ -55,7 +53,7 @@ console.log("Reaction profiles:", summary.profiles);
     const wasReacted = reacted;
     setBusy(true);
 
-    // Uppdatera direkt, backa om det misslyckas
+    // Update immediately, then roll back if it fails.
     setReacted(!wasReacted);
     setCount((c) => c + (wasReacted ? -1 : 1));
 
@@ -71,64 +69,54 @@ console.log("Reaction profiles:", summary.profiles);
       setCount((c) => c + (wasReacted ? 1 : -1));
     } finally {
       setBusy(false);
-       console.log("reaktion!!!", wasReacted, "postId", postId, "userId", userId)
+      console.log("reaktion!!!", wasReacted, "postId", postId, "userId", userId);
     }
   }
 
-return (
-  <div className="reaction-wrapper">
-    <button
-      type="button"
-      className="reaction-button"
-      onClick={handleToggle}
-      aria-pressed={reacted}
-      aria-label={reacted ? "Ta bort gilla" : "Gilla"}
-    >
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill={reacted ? "currentColor" : "none"}
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
+  return (
+    <div className="reaction-wrapper">
+      <button
+        type="button"
+        className="reaction-button"
+        onClick={handleToggle}
+        aria-pressed={reacted}
+        aria-label={reacted ? "Ta bort gilla" : "Gilla"}
       >
-        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z" />
-      </svg>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill={reacted ? "currentColor" : "none"}
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z" />
+        </svg>
 
-      {count > 0 && <span>{count}</span>}
-    </button>
+        {count > 0 && <span>{count}</span>}
+      </button>
 
-    {profiles.length > 0 && (
-      <div className="reaction-avatars">
-        {profiles.slice(0, 4).map((profile) => (
-          <div
-            className="reaction-avatar"
-            key={profile.id}
-            title={profile.display_name}
-          >
-            {profile.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt={profile.display_name}
-              />
-            ) : (
-              <span>
-                {profile.display_name?.charAt(0).toUpperCase() ?? "?"}
-              </span>
-            )}
-          </div>
-        ))}
+      {profiles.length > 0 && (
+        <div className="reaction-avatars">
+          {profiles.slice(0, 4).map((profile) => (
+            <Avatar
+              key={profile.id}
+              src={profile.avatar_url}
+              name={profile.display_name}
+              size={32}
+            />
+          ))}
 
-        {profiles.length > 4 && (
-          <span className="reaction-more">
-            +{profiles.length - 4}
-          </span>
-        )}
-      </div>
-    )}
-  </div>
-);
+          {profiles.length > 4 && (
+            <span className="reaction-more">
+              +{profiles.length - 4}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
