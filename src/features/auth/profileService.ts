@@ -1,5 +1,6 @@
 
 import { supabase } from "../../lib/supabase";
+import { optimizeImage } from "../../lib/optimizeImage";
 import type { Profile } from "./types/profile";
 
 // Create a temporary URL for a private profile image.
@@ -80,7 +81,8 @@ export async function uploadProfileAvatar(
   if (userError) throw userError;
   if (!user) throw new Error("Ingen användare är inloggad.");
 
-  const fileExtension = file.name.split(".").pop()?.toLowerCase();
+  const optimizedFile = await optimizeImage(file, 500);
+const fileExtension = "webp";
 
   if (!fileExtension) {
     throw new Error("Bilden saknar filändelse.");
@@ -102,10 +104,10 @@ console.log("Upload auth debug:", {
   const { data, error } = await supabase.storage
     .from("circle-media")
     
-    .upload(filePath, file, {
-      upsert: true,
-      contentType: file.type,
-    });
+.upload(filePath, optimizedFile, {
+  upsert: true,
+  contentType: "image/webp",
+});
 
   if (error) throw error;
 

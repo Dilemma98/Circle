@@ -1,4 +1,5 @@
 import { supabase } from "../../../lib/supabase";
+import { optimizeImage } from "../../../lib/optimizeImage";
 import type { ImagePreview } from "../hooks/useImagePreviews";
 import type { GroupPhoto } from "../types/post";
 import { getAvatarUrl } from "../../auth/profileService";
@@ -44,12 +45,14 @@ export async function uploadPostImage(
   image: ImagePreview,
   position: number,
 ) {
-  const fileExtension = image.file.name.split(".").pop();
+  const optimizedFile = await optimizeImage(image.file, 1600);
+
+const fileExtension = "webp";
   const filePath = `${groupId}/${postId}/${image.id}.${fileExtension}`;
 
   const { data, error } = await supabase.storage
     .from("circle-media")
-    .upload(filePath, image.file);
+    .upload(filePath, optimizedFile);
 
   if (error) throw error;
 
