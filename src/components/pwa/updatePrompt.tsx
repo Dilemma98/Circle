@@ -18,7 +18,12 @@ export default function UpdatePrompt() {
     updateServiceWorker(true);
   };
 
-  if (!needRefresh) return null;
+  if (!needRefresh) {
+    console.log("No new updates");
+    return null
+  };
+
+  console.log("Update exists!");
 
   return (
     <div className="update-prompt" role="alert">
