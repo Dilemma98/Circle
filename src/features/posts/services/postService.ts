@@ -47,7 +47,7 @@ export async function uploadPostImage(
 ) {
   const optimizedFile = await optimizeImage(image.file, 1600);
 
-const fileExtension = "webp";
+  const fileExtension = "webp";
   const filePath = `${groupId}/${postId}/${image.id}.${fileExtension}`;
 
   const { data, error } = await supabase.storage
@@ -68,18 +68,38 @@ const fileExtension = "webp";
 
   return data.path;
 }
+export async function getGroupPosts(
+  groupIds: string[],
+  page = 0,
+  pageSize = 10,
+) {
+  if (groupIds.length === 0) {
+    return { posts: [], hasMore: false };
+  }
 
-export async function getGroupPosts(groupIds: string[]) {
+  // Fetch one extra post to check whether another page exists.
+  const from = page * pageSize;
+  const to = from + pageSize;
+
   const { data, error } = await supabase
     .from("posts")
     .select("*, comments(count)")
     .in("group_id", groupIds)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
+    .range(from, to);
 
   if (error) throw error;
-  const postIds = data.map((post) => post.id);
 
-  const authorIds = [...new Set(data.map((post) => post.author_id))];
+  const hasMore = data.length > pageSize;
+  const pagePosts = data.slice(0, pageSize);
+
+  if (pagePosts.length === 0) {
+    return { posts: [], hasMore: false };
+  }
+
+  const postIds = pagePosts.map((post) => post.id);
+  const authorIds = [...new Set(pagePosts.map((post) => post.author_id))];
 
   const { data: profiles, error: profilesError } = await supabase
     .from("profiles")
@@ -89,11 +109,11 @@ export async function getGroupPosts(groupIds: string[]) {
   if (profilesError) throw profilesError;
 
   const profilesWithAvatars = await Promise.all(
-  profiles.map(async (profile) => ({
-    ...profile,
-    avatar_url: await getAvatarUrl(profile.avatar_url),
-  }))
-);
+    profiles.map(async (profile) => ({
+      ...profile,
+      avatar_url: await getAvatarUrl(profile.avatar_url),
+    })),
+  );
 
   const { data: mediaData, error: mediaError } = await supabase
     .from("post_media")
@@ -118,10 +138,10 @@ export async function getGroupPosts(groupIds: string[]) {
     }),
   );
 
-  return data.map((post) => {
+  const posts = pagePosts.map((post) => {
     const author = profilesWithAvatars.find(
-  (profile) => profile.id === post.author_id
-);
+      (profile) => profile.id === post.author_id,
+    );
 
     return {
       id: post.id,
@@ -143,28 +163,83 @@ export async function getGroupPosts(groupIds: string[]) {
         })),
     };
   });
+
+  return { posts, hasMore };
 }
 
-export async function getGroupPhotos(
-  groupId: string,
-): Promise<GroupPhoto[]> {
-  // Get all posts from the selected group.
-  const posts = await getGroupPosts([groupId]);
+export async function getGroupPhotos(groupId: string): Promise<GroupPhoto[]> {
+  // Get only the post information needed for the album.
+  const { data: posts, error: postsError } = await supabase
+    .from("posts")
+    .select("id, author_id, created_at")
+    .eq("group_id", groupId);
 
-  // Extract every image from the posts.
-  const photos = posts.flatMap((post) =>
-    post.media
-      .filter((media) => media.type === "image")
-      .map((image) => ({
-        id: image.id,
-        postId: post.id,
-        url: image.url,
-        caption: image.caption,
-        authorName: post.authorName,
-        authorAvatar: post.authorAvatar,
-        createdAt: post.createdAt,
-      })),
+  if (postsError) throw postsError;
+  if (posts.length === 0) return [];
+
+  const postIds = posts.map((post) => post.id);
+  const authorIds = [...new Set(posts.map((post) => post.author_id))];
+
+  // Get only image media belonging to these posts.
+  const { data: mediaData, error: mediaError } = await supabase
+    .from("post_media")
+    .select("id, post_id, storage_path, caption, position")
+    .in("post_id", postIds)
+    .eq("type", "image")
+    .order("position", { ascending: true });
+
+  if (mediaError) throw mediaError;
+  if (mediaData.length === 0) return [];
+
+  // Get the authors' profile information.
+  const { data: profiles, error: profilesError } = await supabase
+    .from("profiles")
+    .select("id, display_name, avatar_url")
+    .in("id", authorIds);
+
+  if (profilesError) throw profilesError;
+
+  const profilesWithAvatars = await Promise.all(
+    profiles.map(async (profile) => ({
+      ...profile,
+      avatar_url: await getAvatarUrl(profile.avatar_url),
+    })),
   );
 
-  return photos;
+  // Create private signed URLs for the album images.
+  const photosWithUrls = await Promise.all(
+    mediaData.map(async (media) => {
+      const { data, error } = await supabase.storage
+        .from("circle-media")
+        .createSignedUrl(media.storage_path, 3600);
+
+      if (error) throw error;
+
+      const post = posts.find((item) => item.id === media.post_id);
+      const author = profilesWithAvatars.find(
+        (profile) => profile.id === post?.author_id,
+      );
+
+      return {
+        id: media.id,
+        postId: media.post_id,
+        url: data.signedUrl,
+        caption: media.caption ?? undefined,
+        authorName: author?.display_name ?? "Okänd användare",
+        authorAvatar: author?.avatar_url ?? null,
+        createdAt: post?.created_at ?? "",
+        position: media.position,
+      };
+    }),
+  );
+
+  // Keep the newest posts first and preserve image order within each post.
+  return photosWithUrls
+    .sort((a, b) => {
+      const dateDifference =
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+
+      return dateDifference || a.position - b.position;
+    })
+    .map(({ position: _position, ...photo }) => photo);
 }

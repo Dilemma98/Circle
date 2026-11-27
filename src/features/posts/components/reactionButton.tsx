@@ -106,7 +106,7 @@ export default function ReactionButton({ postId }: ReactionButtonProps) {
               key={profile.id}
               src={profile.avatar_url}
               name={profile.display_name}
-              size={32}
+              size={24}
             />
           ))}
 

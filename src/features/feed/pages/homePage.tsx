@@ -1,10 +1,10 @@
-
 import "./homePage.css";
 
 import type { Post } from "../../posts/types/post";
 import PostCard from "../../posts/components/postCard";
 import type { ImagePreview } from "../../posts/hooks/useImagePreviews";
 
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../auth/authProvider";
 import { getMyGroups } from "../../groups/groupService";
@@ -18,9 +18,6 @@ import {
 
 import EmptyFeed from "../components/emptyFeed";
 import CreatePostModal from "../../posts/components/createPostModal";
-import Avatar from "../../../components/avatar";
-
-import { ImagePlus, PenLine } from "lucide-react";
 
 export default function HomePage() {
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
@@ -28,8 +25,53 @@ export default function HomePage() {
   const [groups, setGroups] = useState<Group[]>([]);
   const [groupsLoading, setGroupsLoading] = useState(true);
   const [postsLoading, setPostsLoading] = useState(true);
+const [hasMorePosts, setHasMorePosts] = useState(false);
+const [loadingMorePosts, setLoadingMorePosts] = useState(false);
+const [postPage, setPostPage] = useState(0);
 
   const { profile } = useAuth();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.openCreatePost) {
+      setIsCreatePostOpen(true);
+
+      // Clear the navigation state so the modal does not reopen on refresh.
+      navigate(location.pathname, {
+        replace: true,
+        state: null,
+      });
+    }
+  }, [location.pathname, location.state, navigate]);
+
+  async function loadMorePosts() {
+  if (groups.length === 0 || loadingMorePosts) return;
+
+  const nextPage = postPage + 1;
+
+  setLoadingMorePosts(true);
+
+  try {
+    const result = await getGroupPosts(
+      groups.map((group) => group.id),
+      nextPage,
+    );
+
+    setPosts((currentPosts) => [
+      ...currentPosts,
+      ...result.posts,
+    ]);
+
+    setPostPage(nextPage);
+    setHasMorePosts(result.hasMore);
+  } catch (error) {
+    console.error("Could not load more posts:", error);
+  } finally {
+    setLoadingMorePosts(false);
+  }
+}
 
   useEffect(() => {
     async function loadGroups() {
@@ -40,8 +82,11 @@ export default function HomePage() {
         const groupIds = data.map((group) => group.id);
 
         if (groupIds.length > 0) {
-          const postsData = await getGroupPosts(groupIds);
-          setPosts(postsData);
+         const result = await getGroupPosts(groupIds, 0);
+
+setPosts(result.posts);
+setHasMorePosts(result.hasMore);
+setPostPage(0);
         }
       } catch (error) {
         console.error("Could not load groups:", error);
@@ -53,10 +98,6 @@ export default function HomePage() {
 
     loadGroups();
   }, []);
-
-  function handleOpenCreatePost() {
-    setIsCreatePostOpen(true);
-  }
 
   function handleCloseCreatePost() {
     setIsCreatePostOpen(false);
@@ -105,55 +146,9 @@ export default function HomePage() {
     <div className="home-page">
       <section className="feed-section">
         {/* Feed header */}
+
         <div className="feed-header">
-          <div>
-            <span className="feed-eyebrow">DIN CIRCLE</span>
-            <h1>Ditt flöde</h1>
-            <p>Se vad som händer bland dina människor.</p>
-          </div>
-
-          <div className="feed-group-count">
-            {groups.length} {groups.length === 1 ? "grupp" : "grupper"}
-          </div>
-        </div>
-
-        {/* Quick post composer */}
-        <div className="quick-post-card">
-          <div className="quick-post-top">
-            <Avatar
-              src={profile?.avatar_url ?? null}
-              name={profile?.display_name ?? ""}
-              size={43}
-            />
-
-            <button
-              type="button"
-              className="quick-post-input"
-              onClick={handleOpenCreatePost}
-            >
-              Vad vill du dela med dig av?
-            </button>
-          </div>
-
-          <div className="quick-post-bottom">
-            <button
-              type="button"
-              className="quick-post-action"
-              onClick={handleOpenCreatePost}
-            >
-              <ImagePlus size={18} />
-              Foto
-            </button>
-
-            <button
-              type="button"
-              className="quick-post-action"
-              onClick={handleOpenCreatePost}
-            >
-              <PenLine size={17} />
-              Skriv ett inlägg
-            </button>
-          </div>
+          <span className="feed-eyebrow">SENASTE FRÅN DINA GRUPPER</span>
         </div>
 
         {/* Posts */}
@@ -167,22 +162,24 @@ export default function HomePage() {
         ) : (
           <div className="post-list">
             {posts.map((post) => {
-              const group = groups.find(
-                (group) => group.id === post.groupId,
-              );
+              const group = groups.find((group) => group.id === post.groupId);
 
               if (!group) return null;
 
-              return (
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  group={group}
-                />
-              );
+              return <PostCard key={post.id} post={post} group={group} />;
             })}
           </div>
         )}
+        {hasMorePosts && (
+  <button
+    type="button"
+    className="load-more-button"
+    onClick={loadMorePosts}
+    disabled={loadingMorePosts}
+  >
+    {loadingMorePosts ? "Hämtar..." : "Ladda fler inlägg"}
+  </button>
+)}
       </section>
 
       <CreatePostModal

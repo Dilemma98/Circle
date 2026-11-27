@@ -1,96 +1,123 @@
 
+/* ==============================
+   Post card
+============================== */
+
 .post-card {
-  padding: 22px;
+  padding: 18px;
+  margin-bottom: 4px;
   border: 1px solid var(--color-border);
-  border-radius: 18px;
+  border-radius: 20px;
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
-.post-card:hover {
-  border-color: color-mix(
-    in srgb,
-    var(--color-primary) 35%,
-    var(--color-border)
-  );
-}
-
-/* Header */
+/* ==============================
+   Author header
+============================== */
 
 .post-card-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  min-width: 0;
+  margin-bottom: 15px;
 }
 
 .post-card-author {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  gap: 11px;
   min-width: 0;
 }
 
-.post-card-author strong {
+.post-card-author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.post-card-author-name {
   overflow: hidden;
   color: var(--color-text);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 650;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.post-card-author time {
+.post-card-author-info time {
   color: var(--color-text-muted);
-  font-size: 0.77rem;
+  font-size: 0.73rem;
 }
 
 .post-group-tag {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  max-width: 40%;
-  padding: 9px 13px;
-  margin-left: auto;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
+  gap: 6px;
+  flex-shrink: 0;
+  max-width: 42%;
+  padding: 6px 10px;
+  border-radius: 12px;
   background: var(--color-primary-light);
   color: var(--color-primary);
-  font-size: 0.78rem;
-  font-weight: 650;
-  white-space: nowrap;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .post-group-tag svg {
   flex-shrink: 0;
+  color: var(--color-primary);
+  opacity: 0.8;
 }
 
 .post-group-tag span {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Image gallery */
+/* ==============================
+   Post text
+============================== */
+
+.post-card-content {
+  margin: 0 0 15px;
+  color: var(--color-text);
+  font-size: 0.94rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* ==============================
+   Image gallery
+============================== */
 
 .post-card-images {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
-  margin-top: 20px;
+  margin-top: 15px;
   overflow: hidden;
   border-radius: 14px;
 }
 
+.post-card-images:has(.post-card-image-wrapper:only-child) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .post-card-image-wrapper {
   position: relative;
-  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   min-width: 0;
   padding: 0;
   overflow: hidden;
   border: none;
+  border-radius: 12px;
   background: var(--color-surface-secondary);
   cursor: zoom-in;
 }
@@ -112,87 +139,37 @@
   outline-offset: -2px;
 }
 
-/* One image */
-
-.post-card-images--single {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.post-card-images--single .post-card-image-wrapper {
-  width: 100%;
-  max-height: 520px;
-  aspect-ratio: 16 / 9;
-}
-
-/* Two images */
-
-.post-card-images--double {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.post-card-images--double .post-card-image-wrapper {
-  aspect-ratio: 4 / 3;
-}
-
-/* Three images */
-
-.post-card-images--three {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.post-card-images--three .post-card-image-wrapper {
-  aspect-ratio: 4 / 3;
-}
-
-.post-card-images--three .post-card-image-wrapper:nth-child(3) {
-  grid-column: 1 / -1;
-  aspect-ratio: 16 / 9;
-}
-
-/* Four or more images */
-
-.post-card-images--multiple {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.post-card-images--multiple .post-card-image-wrapper {
-  aspect-ratio: 4 / 3;
-}
-
-/* More images overlay */
-
 .post-card-image-overlay {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgb(0 0 0 / 58%);
+  background: rgb(0 0 0 / 55%);
   color: white;
-  font-size: 2rem;
-  font-weight: 650;
-  pointer-events: none;
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
-/* Post text */
-
-.post-card-content {
-  margin: 19px 0 0;
-  color: var(--color-text);
-  font-size: 0.94rem;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-}
-
-/* Footer */
+/* ==============================
+   Actions
+============================== */
 
 .post-card-footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding-top: 12px;
-  margin-top: 15px;
-  border-top: 1px solid var(--color-border);
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.post-card-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.post-card-comment-button {
+  align-self: flex-start;
+  margin-top: 0;
 }
 
 .reaction-button,
@@ -201,15 +178,15 @@
   align-items: center;
   justify-content: center;
   gap: 7px;
-  min-width: 42px;
-  min-height: 40px;
-  padding: 8px 11px;
+  min-width: 40px;
+  min-height: 38px;
+  padding: 7px 11px;
   border: none;
-  border-radius: 10px;
+  border-radius: 20px;
   background: transparent;
   color: var(--color-text-muted);
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 550;
   cursor: pointer;
   transition:
     background 0.2s ease,
@@ -229,47 +206,83 @@
 .post-card-comment-button:active {
   transform: scale(0.94);
 }
+/* Reaction avatars */
+.reaction-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+}
 
-/* Responsive */
+.reaction-avatars {
+  display: flex;
+  align-items: center;
+  padding-left: 2px;
+  min-height: 26px;
+}
+
+.reaction-avatar {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border: 2px solid var(--color-surface);
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.reaction-avatar + .reaction-avatar {
+  margin-left: -7px;
+}
+
+/* ==============================
+   Responsive
+============================== */
 
 @media (max-width: 600px) {
   .post-card {
-    padding: 16px;
-    border-radius: 15px;
+    padding: 14px;
+    border-radius: 17px;
   }
 
-  .post-card-author strong {
-    font-size: 0.86rem;
+  .post-card-header {
+    gap: 8px;
+    margin-bottom: 13px;
   }
 
-  .post-card-author time {
-    font-size: 0.72rem;
+  .post-card-author {
+    gap: 9px;
+  }
+
+  .post-card-author-name {
+    font-size: 0.84rem;
+  }
+
+  .post-card-author-info time {
+    font-size: 0.68rem;
   }
 
   .post-group-tag {
-    max-width: 38%;
-    padding: 7px 9px;
-    font-size: 0.7rem;
-    border: 1px solid transparent;
-  }
-
-  .post-card-images {
-    gap: 5px;
-    margin-top: 16px;
-    border-radius: 11px;
-  }
-
-  .post-card-images--single .post-card-image-wrapper {
-    aspect-ratio: 4 / 3;
+    padding: 6px 8px;
+    font-size: 0.69rem;
   }
 
   .post-card-content {
-    margin-top: 15px;
     font-size: 0.9rem;
   }
 
-  .post-card-footer {
-    padding-top: 9px;
-    margin-top: 12px;
+  .post-card-images {
+    gap: 6px;
+    border-radius: 12px;
+  }
+}
+
+/* ==============================
+   Reduced motion
+============================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .post-card-image-wrapper img {
+    transition: none;
   }
 }

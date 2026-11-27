@@ -44,6 +44,9 @@ export default function GroupPage() {
   const [activeTab, setActiveTab] = useState<GroupTab>("feed");
   const [group, setGroup] = useState<Group | null>(null);
   const [loading, setLoading] = useState(true);
+  const [hasMorePosts, setHasMorePosts] = useState(false);
+const [loadingMorePosts, setLoadingMorePosts] = useState(false);
+const [postPage, setPostPage] = useState(0);
 
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [membersLoading, setMembersLoading] = useState(false);
@@ -148,6 +151,30 @@ export default function GroupPage() {
     loadGroup();
   }, [groupId]);
 
+  async function loadMorePosts() {
+  if (!groupId || loadingMorePosts) return;
+
+  const nextPage = postPage + 1;
+
+  setLoadingMorePosts(true);
+
+  try {
+    const result = await getGroupPosts([groupId], nextPage);
+
+    setPosts((currentPosts) => [
+      ...currentPosts,
+      ...result.posts,
+    ]);
+
+    setPostPage(nextPage);
+    setHasMorePosts(result.hasMore);
+  } catch (error) {
+    console.error("Could not load more group posts:", error);
+  } finally {
+    setLoadingMorePosts(false);
+  }
+}
+
   async function loadMembers() {
     if (!groupId) return;
 
@@ -169,8 +196,11 @@ export default function GroupPage() {
     setPostsLoading(true);
 
     try {
-      const data = await getGroupPosts([groupId]);
-      setPosts(data);
+const result = await getGroupPosts([groupId], 0);
+
+setPosts(result.posts);
+setHasMorePosts(result.hasMore);
+setPostPage(0);
     } catch (error) {
       console.error("Could not load group posts:", error);
     } finally {
@@ -341,7 +371,18 @@ export default function GroupPage() {
               posts.map((post) => (
                 <PostCard key={post.id} post={post} group={group} />
               ))
+              
             )}
+            {hasMorePosts && (
+  <button
+    type="button"
+    className="load-more-button"
+    onClick={loadMorePosts}
+    disabled={loadingMorePosts}
+  >
+    {loadingMorePosts ? "Hämtar..." : "Ladda fler inlägg"}
+  </button>
+)}
           </div>
         )}
 
@@ -368,10 +409,12 @@ export default function GroupPage() {
                     {datePhotos.map((photo) => (
                       <div className="group-album-photo" key={photo.id}>
                         <img
-                          className="album-image"
-                          src={photo.url}
-                          alt={photo.caption || "Bild i gruppens album"}
-                        />
+  className="album-image"
+  src={photo.url}
+  alt={photo.caption || "Bild i gruppens album"}
+  loading="lazy"
+  decoding="async"
+/>
 
                         <Avatar
                           src={photo.authorAvatar}

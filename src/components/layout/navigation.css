@@ -41,6 +41,36 @@
   height: 32px;
 }
 
+.create-post-nav-button {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 15px;
+  background: var(--color-primary);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.create-post-nav-button svg {
+  width: 25px;
+  height: 25px;
+  stroke-width: 2;
+}
+
+.create-post-nav-button:hover {
+  transform: scale(1.06);
+  opacity: 0.9;
+}
+
+.create-post-nav-button:active {
+  transform: scale(0.95);
+}
+
 @media (max-width: 600px) {
   .main-navigation {
     position: fixed;

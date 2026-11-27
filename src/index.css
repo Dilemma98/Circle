@@ -1,3 +1,28 @@
+@import url('https://fonts.cdnfonts.com/css/medio-3');
+
+
+.load-more-button {
+  display: block;
+  margin: 24px auto 40px;
+  padding: 11px 22px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.load-more-button:hover:not(:disabled) {
+  background: var(--color-surface-secondary);
+}
+
+.load-more-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
 :root {
 --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-display: "Plus Jakarta Sans", system-ui, sans-serif;

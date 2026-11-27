@@ -1,15 +1,8 @@
 
 import "./createPostModal.css";
 
-import useImagePreviews, {
-  type ImagePreview,
-} from "../hooks/useImagePreviews";
-
 import { useState } from "react";
 import type { ChangeEvent } from "react";
-import type { Group } from "../../groups/types/group";
-import { useAuth } from "../../auth/authProvider";
-
 import {
   X,
   ImagePlus,
@@ -18,6 +11,13 @@ import {
   Users,
   Send,
 } from "lucide-react";
+
+import useImagePreviews, {
+  type ImagePreview,
+} from "../hooks/useImagePreviews";
+
+import type { Group } from "../../groups/types/group";
+import { useAuth } from "../../auth/authProvider";
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -41,16 +41,10 @@ export default function CreatePostModal({
   const [selectedGroupId, setSelectedGroupId] = useState("");
   const [content, setContent] = useState("");
 
-  const {
-    images,
-    addImages,
-    removeImage,
-    clearImages,
-  } = useImagePreviews();
+  const { images, addImages, removeImage, clearImages } =
+    useImagePreviews();
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   function handleClose() {
     setSelectedGroupId("");
@@ -62,18 +56,11 @@ export default function CreatePostModal({
   function handlePublish() {
     if (!selectedGroupId || !content.trim()) return;
 
-    onCreatePost(
-      content.trim(),
-      selectedGroupId,
-      images,
-    );
-
+    onCreatePost(content.trim(), selectedGroupId, images);
     handleClose();
   }
 
-  function handleImageChange(
-    event: ChangeEvent<HTMLInputElement>,
-  ) {
+  function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
 
     addImages(files);
@@ -96,7 +83,6 @@ export default function CreatePostModal({
         aria-modal="true"
         aria-labelledby="create-post-title"
       >
-        {/* Header */}
         <header className="modal-header">
           <div>
             <h2 id="create-post-title">Skapa inlägg</h2>
@@ -113,7 +99,6 @@ export default function CreatePostModal({
           </button>
         </header>
 
-        {/* Author */}
         <div className="post-author">
           <div className="post-author-avatar">
             {profile?.avatar_url ? (
@@ -129,7 +114,6 @@ export default function CreatePostModal({
           </div>
         </div>
 
-        {/* Group selector */}
         <div className="group-select-container">
           <label htmlFor="post-group">
             <Users size={15} />
@@ -156,14 +140,13 @@ export default function CreatePostModal({
             <ChevronDown size={17} />
           </div>
 
-          {selectedGroup && (
+          {/* {selectedGroup && (
             <span className="selected-group-hint">
               Inlägget delas med {selectedGroup.name}.
             </span>
-          )}
+          )} */}
         </div>
 
-        {/* Post content */}
         <div className="post-composer">
           <textarea
             className="post-textarea"
@@ -175,12 +158,13 @@ export default function CreatePostModal({
           />
         </div>
 
-        {/* Image previews */}
         {images.length > 0 && (
           <div className="image-preview-section">
             <div className="image-preview-heading">
               <strong>Foton</strong>
-              <span>{images.length} {images.length === 1 ? "bild" : "bilder"}</span>
+              <span>
+                {images.length} {images.length === 1 ? "bild" : "bilder"}
+              </span>
             </div>
 
             <div className="image-preview-list">
@@ -201,23 +185,12 @@ export default function CreatePostModal({
                       <X size={16} />
                     </button>
                   </div>
-
-                  {/* <textarea
-                    className="image-caption-input"
-                    placeholder="Lägg till bildtext..."
-                    value={image.caption}
-                    onChange={(event) =>
-                      updateCaption(image.id, event.target.value)
-                    }
-                    rows={2}
-                  /> */}
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Attachment options */}
         <div className="post-attachment-section">
           <span className="attachment-heading">
             Lägg till i ditt inlägg
@@ -254,7 +227,6 @@ export default function CreatePostModal({
           </div>
         </div>
 
-        {/* Footer */}
         <footer className="modal-footer">
           <button
             type="button"

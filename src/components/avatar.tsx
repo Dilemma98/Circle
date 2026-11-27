@@ -32,7 +32,12 @@ export default function Avatar({
       style={{ width: size, height: size }}
     >
       {src ? (
-        <img src={src} alt="" />
+        <img
+  src={src}
+  alt=""
+  loading="lazy"
+  decoding="async"
+/>
       ) : fallback === "icon" ? (
         <UserRound />
       ) : (

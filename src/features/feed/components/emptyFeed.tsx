@@ -1,7 +1,7 @@
 import "./emptyFeed.css";
 
 export default function EmptyFeed() {
-  return (
+  return (  
     <div className="empty-feed">
       <div className="empty-feed-icon">
         <span>✦</span>
