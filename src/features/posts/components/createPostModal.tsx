@@ -67,9 +67,9 @@ export default function CreatePostModal({
     event.target.value = "";
   }
 
-  const selectedGroup = groups.find(
-    (group) => group.id === selectedGroupId,
-  );
+  // const selectedGroup = groups.find(
+  //   (group) => group.id === selectedGroupId,
+  // );
 
   const initials =
     profile?.display_name?.charAt(0).toUpperCase() || "?";
@@ -139,12 +139,6 @@ export default function CreatePostModal({
 
             <ChevronDown size={17} />
           </div>
-
-          {/* {selectedGroup && (
-            <span className="selected-group-hint">
-              Inlägget delas med {selectedGroup.name}.
-            </span>
-          )} */}
         </div>
 
         <div className="post-composer">
