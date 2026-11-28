@@ -10,14 +10,39 @@ export interface Invitation {
   accepted_at: string | null;
 }
 
-export async function getInvitationByToken(
-  token: string
+interface CreatedInvitation {
+  id: string;
+  group_id: string;
+  code: string;
+  expires_at: string;
+}
+
+interface SendInvitationResponse {
+  message: string;
+  invitation: CreatedInvitation;
+}
+
+interface AcceptInvitationResponse {
+  message: string;
+  group: {
+    group_id: string;
+    group_name: string;
+  };
+}
+
+export async function getInvitationByCode(
+  code: string,
 ): Promise<Invitation | null> {
+  const normalizedCode = code
+    .trim()
+    .toUpperCase()
+    .replace(/-/g, "");
+
   const { data, error } = await supabase.rpc(
-    "get_invitation_by_token",
+    "get_invitation_by_code",
     {
-      invitation_token: token,
-    }
+      invitation_code: normalizedCode,
+    },
   );
 
   if (error) {
@@ -27,11 +52,13 @@ export async function getInvitationByToken(
   return data?.[0] ?? null;
 }
 
-export async function acceptInvitation(token: string) {
+export async function acceptInvitation(
+  code: string
+): Promise<AcceptInvitationResponse> {
   const { data, error } = await supabase.functions.invoke(
     "accept-invitation",
     {
-      body: { token },
+      body: { code },
     }
   );
 
@@ -53,10 +80,12 @@ export async function acceptInvitation(token: string) {
     throw new Error(data.error);
   }
 
-  return data;
+  return data as AcceptInvitationResponse;
 }
 
-export async function sendInvitation(groupId: string) {
+export async function sendInvitation(
+  groupId: string
+): Promise<SendInvitationResponse> {
   const { data, error } = await supabase.functions.invoke(
     "send-invitation",
     {
@@ -71,7 +100,7 @@ export async function sendInvitation(groupId: string) {
       const errorData = await response.json();
 
       throw new Error(
-        errorData.error ?? "Kunde inte skapa inbjudningslänk."
+        errorData.error ?? "Kunde inte skapa inbjudningskod."
       );
     }
 
@@ -82,14 +111,5 @@ export async function sendInvitation(groupId: string) {
     throw new Error(data.error);
   }
 
-  return data as {
-    message: string;
-    invitation: {
-      id: string;
-      group_id: string;
-      token: string;
-      expires_at: string;
-    };
-    invitationUrl: string;
-  };
+  return data as SendInvitationResponse;
 }

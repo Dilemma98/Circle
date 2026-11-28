@@ -10,7 +10,7 @@ interface InvitationPanelProps {
 export default function InvitationPanel({
   groupId,
 }: InvitationPanelProps) {
-  const [invitationUrl, setInvitationUrl] = useState("");
+  const [invitationCode, setInvitationCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
@@ -22,14 +22,14 @@ export default function InvitationPanel({
 
     try {
       const result = await sendInvitation(groupId);
-      setInvitationUrl(result.invitationUrl);
+      setInvitationCode(result.invitation.code);
     } catch (error) {
       console.error("Could not create invitation:", error);
 
       setError(
         error instanceof Error
           ? error.message
-          : "Kunde inte skapa inbjudningslänk.",
+          : "Kunde inte skapa inbjudningskod.",
       );
     } finally {
       setLoading(false);
@@ -37,23 +37,25 @@ export default function InvitationPanel({
   }
 
   async function handleCopyInvitation() {
-    if (!invitationUrl) return;
+    if (!invitationCode) return;
 
     try {
-      await navigator.clipboard.writeText(invitationUrl);
+      await navigator.clipboard.writeText(invitationCode);
       setCopied(true);
       setError("");
     } catch (error) {
-      console.error("Could not copy invitation link:", error);
-      setError("Kunde inte kopiera länken. Försök igen.");
+      console.error("Could not copy invitation code:", error);
+      setError("Kunde inte kopiera koden. Försök igen.");
     }
   }
 
   function handleClose() {
-    setInvitationUrl("");
+    setInvitationCode("");
     setError("");
     setCopied(false);
   }
+
+  const formattedCode = invitationCode.match(/.{1,4}/g)?.join("-") ?? "";
 
   return (
     <div className="invitation-panel">
@@ -65,19 +67,19 @@ export default function InvitationPanel({
         <div className="invitation-heading">
           <h3>Bjud in till gruppen</h3>
           <p>
-            Dela era minnen med fler. Skapa en personlig länk
+            Dela era minnen med fler. Skapa en personlig kod
             som du kan skicka vidare.
           </p>
         </div>
       </div>
 
-      {!invitationUrl ? (
+      {!invitationCode ? (
         <div className="invitation-create">
           <div className="invitation-info">
             <span className="invitation-info-icon">ⓘ</span>
             <p>
-              Den som får länken kan öppna den, skapa ett konto
-              och gå med i gruppen. Länken gäller i 7 dagar.
+              Den som får koden kan ange den i Circle och gå med
+              i gruppen. Koden gäller i 7 dagar och kan användas en gång.
             </p>
           </div>
 
@@ -96,12 +98,12 @@ export default function InvitationPanel({
             {loading ? (
               <>
                 <span className="invitation-spinner" />
-                Skapar länk...
+                Skapar kod...
               </>
             ) : (
               <>
                 <span>＋</span>
-                Skapa inbjudningslänk
+                Skapa inbjudningskod
               </>
             )}
           </button>
@@ -111,18 +113,18 @@ export default function InvitationPanel({
           <div className="invitation-success">
             <span className="invitation-success-icon">✓</span>
             <div>
-              <strong>Din inbjudan är redo!</strong>
-              <p>Nu kan du dela länken med den du vill bjuda in.</p>
+              <strong>Din inbjudningskod är redo!</strong>
+              <p>Skicka koden till personen du vill bjuda in.</p>
             </div>
           </div>
 
-          <label htmlFor="invitation-url">Inbjudningslänk</label>
+          <label htmlFor="invitation-code">Inbjudningskod</label>
 
           <div className="invitation-link-field">
             <input
-              id="invitation-url"
+              id="invitation-code"
               type="text"
-              value={invitationUrl}
+              value={formattedCode}
               readOnly
               onFocus={(event) => event.currentTarget.select()}
             />
@@ -138,7 +140,7 @@ export default function InvitationPanel({
 
           {copied && (
             <p className="invitation-copy-feedback" role="status">
-              Länken har kopierats. Du kan nu klistra in den i ett meddelande.
+              Koden har kopierats. Du kan nu skicka den i ett meddelande.
             </p>
           )}
 

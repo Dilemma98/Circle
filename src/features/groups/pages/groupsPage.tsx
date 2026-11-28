@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import JoinGroupCard from "../components/joinGroupCard";
 
 import "./groupsPage.css";
 
@@ -73,7 +74,7 @@ export default function GroupsPage() {
         {!loading && !error && groups.length === 0 && (
           <p>Du har inte gått med i någon grupp ännu.</p>
         )}
-           <button
+        <button
           type="button"
           className="create-group-card"
           onClick={() => setShowCreateForm((current) => !current)}
@@ -81,6 +82,8 @@ export default function GroupsPage() {
           <span className="create-group-icon">+</span>
           <span>Skapa ny grupp</span>
         </button>
+
+        <JoinGroupCard />
 
         {!loading &&
           !error &&
@@ -103,43 +106,41 @@ export default function GroupsPage() {
               </div>
             </Link>
           ))}
-    
-
       </section>
-       {showCreateForm && (
-          <form className="create-group-form" onSubmit={handleCreateGroup}>
-            <label htmlFor="groupName">Gruppnamn</label>
+      {showCreateForm && (
+        <form className="create-group-form" onSubmit={handleCreateGroup}>
+          <label htmlFor="groupName">Gruppnamn</label>
 
-            <input
-              id="groupName"
-              type="text"
-              value={groupName}
-              onChange={(event) => setGroupName(event.target.value)}
-              placeholder="Exempelvis Familjen"
-              maxLength={50}
-              required
-            />
+          <input
+            id="groupName"
+            type="text"
+            value={groupName}
+            onChange={(event) => setGroupName(event.target.value)}
+            placeholder="Exempelvis Familjen"
+            maxLength={50}
+            required
+          />
 
-            {createError && <p className="create-group-error">{createError}</p>}
+          {createError && <p className="create-group-error">{createError}</p>}
 
-            <div className="create-group-actions">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowCreateForm(false);
-                  setGroupName("");
-                  setCreateError(null);
-                }}
-              >
-                Avbryt
-              </button>
+          <div className="create-group-actions">
+            <button
+              type="button"
+              onClick={() => {
+                setShowCreateForm(false);
+                setGroupName("");
+                setCreateError(null);
+              }}
+            >
+              Avbryt
+            </button>
 
-              <button type="submit" disabled={creating}>
-                {creating ? "Skapar..." : "Skapa"}
-              </button>
-            </div>
-          </form>
-        )}
+            <button type="submit" disabled={creating}>
+              {creating ? "Skapar..." : "Skapa"}
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }

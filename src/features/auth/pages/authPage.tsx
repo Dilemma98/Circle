@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import { signIn, signUp } from "../authService";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getInvitationByToken } from "../../invitations/invitationService";
 
 import "./authPage.css";
 
@@ -9,10 +9,10 @@ type AuthMode = "login" | "register";
 
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
-  const invitationToken = searchParams.get("invite");
-  const [invitationLoading, setInvitationLoading] = useState(false);
+  const invitationCode = searchParams.get("invite");
+
   const [mode, setMode] = useState<AuthMode>(
-    invitationToken ? "register" : "login",
+    invitationCode ? "register" : "login",
   );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,32 +24,9 @@ export default function AuthPage() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function loadInvitation() {
-      if (!invitationToken) return;
-
-      setInvitationLoading(true);
-
-      try {
-        const invitation = await getInvitationByToken(invitationToken);
-
-        if (!invitation) {
-          setError("Vi kunde inte hitta någon giltig inbjudan.");
-          return;
-        }
-
-      } catch (error) {
-        console.error("Could not load invitation:", error);
-        setError("Det gick inte att hämta inbjudan.");
-      } finally {
-        setInvitationLoading(false);
-      }
-    }
-
-    loadInvitation();
-  }, [invitationToken]);
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+  ) {
     event.preventDefault();
 
     setError(null);
@@ -58,14 +35,21 @@ export default function AuthPage() {
 
     try {
       if (mode === "register") {
-        const redirectTo = invitationToken
-          ? `${window.location.origin}/invite/${invitationToken}`
+        const redirectTo = invitationCode
+          ? `${window.location.origin}/invite?code=${encodeURIComponent(invitationCode)}`
           : undefined;
 
-        const data = await signUp(email, password, displayName, redirectTo);
+        const data = await signUp(
+          email,
+          password,
+          displayName,
+          redirectTo,
+        );
 
-        if (data.session && invitationToken) {
-          navigate(`/invite/${invitationToken}`);
+        if (data.session && invitationCode) {
+          navigate(
+            `/invite?code=${encodeURIComponent(invitationCode)}`,
+          );
         } else {
           setMessage(
             "Kontot har skapats! Kontrollera din e-post för att bekräfta kontot.",
@@ -74,8 +58,10 @@ export default function AuthPage() {
       } else {
         await signIn(email, password);
 
-        if (invitationToken) {
-          navigate(`/invite/${invitationToken}`);
+        if (invitationCode) {
+          navigate(
+            `/invite?code=${encodeURIComponent(invitationCode)}`,
+          );
         } else {
           navigate("/");
         }
@@ -137,11 +123,7 @@ export default function AuthPage() {
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder={
-                invitationLoading
-                  ? "Hämtar e-postadress..."
-                  : "namn@example.com"
-              }
+              placeholder="namn@example.com"
               required
             />
           </div>
@@ -162,7 +144,7 @@ export default function AuthPage() {
           {error && <p className="auth-error">{error}</p>}
           {message && <p className="auth-message">{message}</p>}
 
-          <button type="submit" disabled={loading || invitationLoading}>
+          <button type="submit" disabled={loading}>
             {loading
               ? "Vänta..."
               : mode === "login"
