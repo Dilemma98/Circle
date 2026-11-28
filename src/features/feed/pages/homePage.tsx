@@ -145,11 +145,6 @@ setPostPage(0);
   return (
     <div className="home-page">
       <section className="feed-section">
-        {/* Feed header */}
-
-        <div className="feed-header">
-          <span className="feed-eyebrow">SENASTE FRÅN DINA GRUPPER</span>
-        </div>
 
         {/* Posts */}
         {postsLoading ? (

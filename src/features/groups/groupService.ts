@@ -126,6 +126,24 @@ return Promise.all(
   }),
 );
 }
+
+export async function updateGroupName(
+  groupId: string,
+  name: string,
+): Promise<void> {
+  const trimmedName = name.trim();
+
+  if (!trimmedName) {
+    throw new Error("Gruppnamnet får inte vara tomt.");
+  }
+
+  const { error } = await supabase
+    .from("groups")
+    .update({ name: trimmedName })
+    .eq("id", groupId);
+
+  if (error) throw error;
+}
 // Create a signed URL for a group's cover image.
 export async function getGroupCoverUrl(
   storagePath: string | null,

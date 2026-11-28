@@ -54,10 +54,15 @@ export default function PostCard({ post, group }: PostCardProps) {
           </div>
         </div>
 
-        <div className="post-group-tag">
-          <Users size={14} />
-          <span>{group.name}</span>
-        </div>
+<div
+  className="post-group-tag"
+style={{
+  "--tag-color": group.color || "#F4C8D7",
+} as React.CSSProperties}
+>
+  <Users size={14} />
+  <span>{group.name}</span>
+</div>
       </header>
 
       {post.content && (

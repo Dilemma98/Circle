@@ -2,16 +2,13 @@
 /* ==============================
    Post card
 ============================== */
-
 .post-card {
   padding: 18px;
   margin-bottom: 4px;
   border: 1px solid var(--color-border);
   border-radius: 20px;
-  background: var(--color-surface);
   box-shadow: var(--shadow-card);
 }
-
 /* ==============================
    Author header
 ============================== */
@@ -56,15 +53,13 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  flex-shrink: 0;
-  max-width: 42%;
   padding: 6px 10px;
-  border-radius: 12px;
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  font-size: 0.72rem;
+  border-radius: 20px;
+background: color-mix(in srgb, var(--tag-color) 35%, var(--color-surface));
+  color: var(--color-text);
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
 .post-group-tag svg {

@@ -1,0 +1,182 @@
+
+.group-settings-page {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding-bottom: 48px;
+}
+
+.settings-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.settings-page-header {
+  margin: 24px 0;
+}
+
+.settings-page-header > span {
+  color: var(--color-primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.settings-page-header h1 {
+  margin: 6px 0;
+  color: var(--color-text);
+}
+
+.settings-page-header p,
+.settings-card-heading p {
+  margin: 4px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.settings-card {
+  margin-bottom: 18px;
+  padding: 22px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.settings-card-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.settings-card-heading > svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+  margin-top: 2px;
+}
+
+.settings-card-heading h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.05rem;
+}
+
+.settings-card label:not(.settings-upload-button) {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.settings-name-field {
+  display: flex;
+  gap: 10px;
+}
+
+.settings-name-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--color-border);
+  border-radius: 11px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.settings-name-field button,
+.settings-upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 11px;
+  background: var(--color-primary);
+  color: white;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.settings-name-field button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.group-color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.group-color-option {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.group-color-option.selected {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+}
+
+.settings-cover-preview {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.settings-upload-button {
+  width: fit-content;
+}
+
+.settings-message {
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.settings-message.error {
+  background: var(--color-surface-secondary);
+  color: var(--color-text);
+}
+
+.settings-message.success {
+  background: var(--color-surface-secondary);
+  color: var(--color-primary);
+}
+
+@media (max-width: 480px) {
+  .settings-card {
+    padding: 17px;
+  }
+
+  .settings-name-field {
+    flex-direction: column;
+  }
+
+  .settings-name-field button {
+    width: 100%;
+  }
+}

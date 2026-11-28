@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 
 import AppLayout from "./components/layout/appLayout";
@@ -8,6 +7,7 @@ import GroupPage from "./features/groups/pages/groupPage";
 import AuthPage from "./features/auth/pages/authPage";
 import InvitationPage from "./features/invitations/pages/invitationPage";
 import ProfilePage from "./features/profile/pages/profilePage";
+import GroupSettingsPage from "./features/groups/pages/groupSettingsPage";
 
 import UpdatePrompt from "./components/pwa/updatePrompt";
 
@@ -38,6 +38,10 @@ export default function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/groups" element={<GroupsPage />} />
               <Route path="/groups/:groupId" element={<GroupPage />} />
+              <Route
+                path="/groups/:groupId/settings"
+                element={<GroupSettingsPage />}
+              />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>
           </Routes>

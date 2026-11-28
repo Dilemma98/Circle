@@ -61,54 +61,9 @@ export default function GroupsPage() {
   return (
     <div className="groups-page">
       <section className="groups-page-header">
-        <p className="eyebrow">DIN GEMENSKAP</p>
+        {/* <p className="eyebrow">DIN GEMENSKAP</p> */}
         <h1>Mina grupper</h1>
-        <p>Här samlas människorna och minnena du delar med dem.</p>
       </section>
-
-      <div className="groups-actions">
-        <button
-          type="button"
-          onClick={() => setShowCreateForm((current) => !current)}
-        >
-          + Skapa grupp
-        </button>
-      </div>
-
-      {showCreateForm && (
-        <form className="create-group-form" onSubmit={handleCreateGroup}>
-          <label htmlFor="groupName">Gruppnamn</label>
-
-          <input
-            id="groupName"
-            type="text"
-            value={groupName}
-            onChange={(event) => setGroupName(event.target.value)}
-            placeholder="Exempelvis Familjen"
-            maxLength={50}
-            required
-          />
-
-          {createError && <p className="create-group-error">{createError}</p>}
-
-          <div className="create-group-actions">
-            <button
-              type="button"
-              onClick={() => {
-                setShowCreateForm(false);
-                setGroupName("");
-                setCreateError(null);
-              }}
-            >
-              Avbryt
-            </button>
-
-            <button type="submit" disabled={creating}>
-              {creating ? "Skapar..." : "Skapa"}
-            </button>
-          </div>
-        </form>
-      )}
 
       <section className="groups-list">
         {loading && <p>Hämtar dina grupper...</p>}
@@ -118,34 +73,73 @@ export default function GroupsPage() {
         {!loading && !error && groups.length === 0 && (
           <p>Du har inte gått med i någon grupp ännu.</p>
         )}
+           <button
+          type="button"
+          className="create-group-card"
+          onClick={() => setShowCreateForm((current) => !current)}
+        >
+          <span className="create-group-icon">+</span>
+          <span>Skapa ny grupp</span>
+        </button>
 
-{!loading &&
-  !error &&
-  groups.map((group) => (
-    <Link
-      to={`/groups/${group.id}`}
-      className="group-card"
-      key={group.id}
-      style={{ backgroundColor: group.color || "#B94D79" }}
-    >
-      {group.coverImage && (
-        <img
-          className="group-cover"
-          src={group.coverImage}
-          alt=""
-        />
-      )}
+        {!loading &&
+          !error &&
+          groups.map((group) => (
+            <Link
+              to={`/groups/${group.id}`}
+              className="group-card"
+              key={group.id}
+              style={{ backgroundColor: group.color || "#B94D79" }}
+            >
+              {group.coverImage && (
+                <img className="group-cover" src={group.coverImage} alt="" />
+              )}
 
-      <div className="group-card-overlay" />
+              <div className="group-card-overlay" />
 
-      <div className="group-card-content">
-        <span className="group-card-label">GEMENSKAP</span>
-        <h2>{group.name}</h2>
-        <span className="group-card-arrow">↗</span>
-      </div>
-    </Link>
-  ))}
+              <div className="group-card-content">
+                {/* <span className="group-card-label">GEMENSKAP</span> */}
+                <h2>{group.name}</h2>
+              </div>
+            </Link>
+          ))}
+    
+
       </section>
+       {showCreateForm && (
+          <form className="create-group-form" onSubmit={handleCreateGroup}>
+            <label htmlFor="groupName">Gruppnamn</label>
+
+            <input
+              id="groupName"
+              type="text"
+              value={groupName}
+              onChange={(event) => setGroupName(event.target.value)}
+              placeholder="Exempelvis Familjen"
+              maxLength={50}
+              required
+            />
+
+            {createError && <p className="create-group-error">{createError}</p>}
+
+            <div className="create-group-actions">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCreateForm(false);
+                  setGroupName("");
+                  setCreateError(null);
+                }}
+              >
+                Avbryt
+              </button>
+
+              <button type="submit" disabled={creating}>
+                {creating ? "Skapar..." : "Skapa"}
+              </button>
+            </div>
+          </form>
+        )}
     </div>
   );
 }

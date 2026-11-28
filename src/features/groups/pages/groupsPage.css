@@ -9,7 +9,9 @@
   padding: 40px 24px 64px;
 }
 
-/* Page header */
+/* ========================================
+   Page header
+======================================== */
 
 .groups-page-header {
   margin-bottom: 42px;
@@ -38,42 +40,7 @@
 }
 
 /* ========================================
-   Group actions
-======================================== */
-
-.groups-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 28px;
-}
-
-.groups-actions button {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 12px 20px;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  background: var(--color-primary);
-  color: white;
-  font: inherit;
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.groups-actions button:hover {
-  transform: translateY(-2px);
-  background: var(--color-primary-hover);
-  box-shadow: var(--shadow-card);
-}
-
-/* ========================================
-   Group cards
+   Groups grid
 ======================================== */
 
 .groups-list {
@@ -82,6 +49,10 @@
   gap: 28px;
   justify-items: center;
 }
+
+/* ========================================
+   Group cards
+======================================== */
 
 .group-card {
   position: relative;
@@ -95,6 +66,9 @@
   overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: 50%;
+  background-color: var(--color-primary);
+  background-size: cover;
+  background-position: center;
   color: white;
   text-align: center;
   text-decoration: none;
@@ -136,12 +110,15 @@
 }
 
 .group-card-content {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 9px;
   width: 100%;
   padding: 18px;
+  color: white;
 }
 
 .group-card-label {
@@ -179,6 +156,53 @@
 .group-card:hover .group-card-arrow {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ========================================
+   Create group card
+======================================== */
+
+.create-group-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 210px;
+  aspect-ratio: 1;
+  padding: 18px;
+  border: 2px dashed var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.create-group-card:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface-secondary);
+  transform: translateY(-5px) scale(1.02);
+}
+
+.create-group-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1;
 }
 
 /* ========================================
@@ -308,7 +332,8 @@
     gap: 24px;
   }
 
-  .group-card {
+  .group-card,
+  .create-group-card {
     max-width: 190px;
   }
 }
@@ -326,7 +351,8 @@
     gap: 18px;
   }
 
-  .group-card {
+  .group-card,
+  .create-group-card {
     max-width: 155px;
   }
 
@@ -357,7 +383,8 @@
     grid-template-columns: 1fr;
   }
 
-  .group-card {
+  .group-card,
+  .create-group-card {
     max-width: 180px;
   }
 }
