@@ -188,19 +188,24 @@
 
 .group-tabs {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   margin-bottom: 28px;
   border-bottom: 1px solid var(--color-border);
+  width: 100%;
 }
 
 .group-tabs button {
-  padding: 12px 18px;
+  flex: 1;
+  min-width: 0;
+  padding: 12px 8px;
   margin-bottom: -1px;
   border: none;
   border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--color-text-muted);
+  font-size: 0.9rem;
   font-weight: 500;
+  white-space: nowrap;
   cursor: pointer;
   transition:
     color 0.2s ease,
@@ -373,5 +378,13 @@
 @media (max-width: 400px) {
   .group-album {
     gap: 5px;
+  }
+   .group-tabs {
+    gap: 0;
+  }
+
+  .group-tabs button {
+    padding: 12px 4px;
+    font-size: 0.8rem;
   }
 }
