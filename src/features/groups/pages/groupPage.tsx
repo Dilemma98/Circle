@@ -50,20 +50,6 @@ export default function GroupPage() {
     (member) => member.user_id === user?.id && member.role === "owner",
   );
 
-  const groupedPhotos = photos.reduce<Record<string, GroupPhoto[]>>(
-    (groups, photo) => {
-      const date = new Date(photo.createdAt).toLocaleDateString("sv-SE");
-
-      if (!groups[date]) {
-        groups[date] = [];
-      }
-
-      groups[date].push(photo);
-
-      return groups;
-    },
-    {},
-  );
 
   useEffect(() => {
     async function loadGroup() {
